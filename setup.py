@@ -1,6 +1,6 @@
 import os
 import sys
-from setuptools import setup, find_packages
+from setuptools import setup, find_namespace_packages
 from fnmatch import fnmatchcase
 from distutils.util import convert_path
 
@@ -52,8 +52,7 @@ setup(name='docassemble.MAHousingTRO',
       author_email='qsteenhuis@suffolk.edu',
       license='MIT',
       url='https://courtformsonline.org',
-      packages=find_packages(),
-      namespace_packages=['docassemble'],
+      packages=find_namespace_packages(),
       install_requires=['docassemble.ALMassachusetts>=0.1.1', 'docassemble.AssemblyLine>=2.14.1', 'docassemble.MassAccess>=0.3.0'],
       zip_safe=False,
       package_data=find_package_data(where='docassemble/MAHousingTRO/', package='docassemble.MAHousingTRO'),
