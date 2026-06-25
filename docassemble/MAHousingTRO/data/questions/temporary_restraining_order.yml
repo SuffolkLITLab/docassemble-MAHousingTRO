@@ -1,0 +1,354 @@
+include:
+  - docassemble.AssemblyLine:assembly_line.yml
+  - docassemble.ALMassachusetts:al_massachusetts.yml
+  - docassemble.MassAccess:massaccess.yml
+---
+metadata:
+  title: >-
+    Temporary Restraining Order
+  short title: >-
+    Temporary restraining ord
+  description: |-
+    This interview helps someone in Massachusetts ask the court for a Temporary Restraining Order.
+  can_I_use_this_form: |
+    If you are a _____________, you can use this interview to ____________.
+  before_you_start: |
+    This interview will help you ask the court for a Temporary Restraining Order.
+    
+    Before you get started, please gather:
+    
+    1. 
+    1. 
+    1. 
+    
+    When you are finished, you will need to:
+    
+    1. 
+    1.
+  when_you_are_finished: |
+  efiling_enabled: False
+  integrated_efiling: False
+  integrated_email_filing: False
+  requires_notarization: False
+  unlisted: False
+  landing_page_url: >-
+    https://courtformsonline.org/
+  maturity: production
+  estimated_completion_minutes: 10
+  estimated_completion_delta: 5
+  LIST_topics:
+    - "CO-00-00-00-00"
+  tags:
+    - "CO-00-00-00-00"
+  authors:
+    - Shivani Dahya
+  original_form: []
+  original_form_published_on: ""
+  allowed_courts: 
+    - "Housing Court"
+  typical_role: "plaintiff"
+  al_weaver_version: "2.1.0"
+  generated_on: "2026-06-24"
+  languages:
+    - en
+  jurisdiction: "NAM-US-US+MA"
+  review_date: 2026-06-24
+  form_titles:
+    - Temporary Restraining Order
+  form_numbers: []
+  update_notes: |
+---
+code: |
+  # This controls the default country and list of states in address field questions
+  AL_DEFAULT_COUNTRY = "US"
+---
+code: |
+  # This controls the default state in address field questions
+  AL_DEFAULT_STATE = "MA"
+---
+code: |
+  github_repo_name =  'docassemble-TemporaryRestrainingOrder'
+---
+code: |
+  interview_short_title = 'Ask the court for a Temporary Restraining Order'
+---
+code: |
+  al_form_type = "starts_case" 
+---
+objects:
+  - other_parties: ALPeopleList.using(ask_number=True,target_number=1)
+  - users: ALPeopleList.using(ask_number=True,target_number=1)
+---
+sections:
+  - review_temporary_restraining_order: Review your answers
+---
+comment: |
+  Controls order and branching logic for questions specific to this form
+id: interview_order_temporary_restraining_order
+code: |
+  # Set the allowed courts for this interview
+  allowed_courts = ['Housing Court']
+  user_role = "plaintiff"
+  user_ask_role = "plaintiff"
+  plaintiffs.gather()
+  # plaintiffs[0].address.address
+  # plaintiffs[0].phone_number
+  defendants.gather()
+  set_progress(20)
+  civil_action_number
+  plaintiff_request
+  plaintiff_waiver_request
+  set_progress(40)
+  trial_court.address.city
+  set_progress(60)
+  signature_date
+  basic_questions_signature_flow
+  interview_order_temporary_restraining_order = True
+---
+comment: |
+  This block includes the logic for standalone interviews.
+  Delete mandatory: True to include in another interview
+mandatory: True
+code: |
+  al_intro_screen
+  temporary_restraining_order_intro
+  interview_order_temporary_restraining_order
+  signature_date
+  temporary_restraining_order_preview_question
+  # Store anonymous data for analytics / statistics
+  store_variables_snapshot(
+      persistent=True,
+      data={
+          "zip": showifdef("users[0].address.zip"),
+          "reached_interview_end": True,
+      },
+  )
+  temporary_restraining_order_download
+---
+id: Temporary_Restraining_Order
+continue button field: temporary_restraining_order_intro
+question: |
+  Temporary Restraining Order
+subquestion: |
+  This interview will help you ask the court for a Temporary Restraining Order.
+  
+  Before you get started, please gather:
+  
+  1. 
+  1. 
+  1. 
+  
+  When you are finished, you will need to:
+  
+  1. 
+  1.
+
+  If you are a _____________, you can use this interview to ____________.
+
+  Most people take about 10 minutes to complete this interview.
+---
+id: Civil Action Case Information
+question: |
+  Civil Action Case Information
+fields:
+  - "What is your civil action case number?": civil_action_number
+---
+id: Your Request
+question: |
+  Your Request
+subquestion: What actions do you want the Court to stop the defendant from doing?
+fields: 
+  - "Provide request": plaintiff_request
+    input type: area
+---
+id: Court Fee Waiver
+question: |
+  Court Fee Waiver
+subquestion: Why would you like the Court waive the security requirement?
+fields:
+  - "Provide explanation": plaintiff_waiver_request
+    input type: area
+--- 
+id: preview temporary_restraining_order
+question: |
+  Preview your form before you sign it
+subquestion: |
+  Here is a preview of the form you will sign on the next page.   
+  
+  ${ al_court_bundle.as_pdf(key='preview') }
+
+  Click the image to open it in a new tab. Click the "Edit answers" button
+  to edit your answers.
+
+  ${ action_button_html(url_action('review_temporary_restraining_order'), label='Edit answers', color='info') }
+  
+  Remember to come back to this window to continue and sign your form.
+continue button field: temporary_restraining_order_preview_question    
+---
+code: |
+  # This is a placeholder for the addresses that will be searched
+  # for matching address to court. Edit if court venue is based on 
+  # a different address than the user's
+  [user.address.address for user in users.complete_elements()]
+  addresses_to_search = [user.address for user in users.complete_elements()]
+---
+code: |
+  signature_fields = ['plaintiffs[0].signature']
+---
+id: temporary restraining order review screen
+event: review_temporary_restraining_order
+question: |
+  Review your answers
+review:
+  - Edit: plaintiffs.revisit
+    button: |
+      **Plaintiffs**
+
+      % for item in plaintiffs:
+        * ${ item }
+      % endfor
+  - Edit: trial_court
+    button: |
+      **Trial court**
+  
+      % if defined("trial_court.phone"):
+      * phone_number: ${ trial_court.phone }
+      % endif
+      % if defined("trial_court.address.address"):
+      * address: ${ trial_court.address.block() }
+      % endif
+      % if defined("trial_court.division"):
+      * division: ${ trial_court.division }
+      % endif
+  - Edit: civil_action_number
+    button: |
+      **Civil action case number**:
+      ${ civil_action_number }
+  - Edit: plaintiff_waiver_request
+    button: |
+      **Reason for waiver request**:
+      > ${ single_paragraph(plaintiff_waiver_request) }
+  - Edit: plaintiff_request
+    button: |
+      **Request from plaintiff**:
+      > ${ single_paragraph(plaintiff_request) }
+  - Edit: defendants.revisit
+    button: |
+      **Defendants**
+
+      % for item in defendants:
+        * ${ item }
+      % endfor
+---
+id: edit plaintiffs
+continue button field: plaintiffs.revisit
+question: |
+  Edit plaintiffs
+subquestion: |
+  ${ plaintiffs.table }
+
+  ${ plaintiffs.add_action() }
+---
+table: plaintiffs.table
+rows: plaintiffs
+columns:
+  - Signature: |
+      row_item.signature if defined("row_item.signature") else ""
+  - Name: |
+      row_item.name_full() if defined("row_item.name.first") else ""
+  - Address: |
+      row_item.address.block() if defined("row_item.address.address") else ""
+  - Phone number: |
+      row_item.phone_number if defined("row_item.phone_number") else ""
+edit:
+  - plaintifs[0].signature
+  - plaintifs[0].name.first
+  - plaintifs[0].address.address
+  - plaintifs[0].phone_number
+confirm: True
+---
+id: edit defendants
+continue button field: defendants.revisit
+question: |
+  Edit defendants
+subquestion: |
+  ${ defendants.table }
+
+  ${ defendants.add_action() }
+---
+table: defendants.table
+rows: defendants
+columns:
+  - Name: |
+      row_item.name_full() if defined("row_item.name.first") else ""
+edit:
+  - name.first
+confirm: True
+---
+id: Sign Your Document
+code: |
+  signature_fields = ["plaintiffs[0].signature"]
+---
+id: preview temporary_restraining_order
+question: |
+  Preview your form. 
+subquestion: |
+  Here is a preview of the form.   
+  
+  ${ al_court_bundle.as_pdf(key='preview') }
+
+  Click the image to open it in a new browser tab. Click the "Edit answers" button
+  to edit your answers.
+
+  ${ action_button_html(url_action('review_temporary_restraining_order'), label='Edit answers', color='info') }
+  
+  If you are happy with the document, go to the next page to download your document.
+continue button field: temporary_restraining_order_preview_question
+---
+id: download temporary_restraining_order
+event: temporary_restraining_order_download
+question: |
+  All done
+subquestion: |
+  Thank you ${users}. Your form is ready to download and deliver.
+  
+  View, download and send your form below. Click the "Edit answers" button to fix any mistakes.
+
+  ${ action_button_html(url_action('review_temporary_restraining_order'), label='Edit answers', color='info') }
+  
+  
+  ${ al_user_bundle.download_list_html() }
+  
+
+  ${ al_user_bundle.send_button_html(show_editable_checkbox=True) }
+
+progress: 100
+---
+# ALDocument objects specify the metadata for each template
+objects:
+  - temporary_restraining_order_Post_interview_instructions: ALDocument.using(title="Instructions", filename="temporary_restraining_order_next_steps.docx", enabled=True, has_addendum=False)
+  - temporary_restraining_order_attachment: ALDocument.using(title="Temporary Restraining Order", filename="temporary_restraining_order", enabled=True, has_addendum=False, )
+---
+# Bundles group the ALDocuments into separate downloads, such as for court and for the user
+objects:
+  - al_user_bundle: ALDocumentBundle.using(elements=[temporary_restraining_order_Post_interview_instructions, temporary_restraining_order_attachment], filename="temporary_restraining_order", title="All forms to download for your records", enabled=True)
+  - al_court_bundle: ALDocumentBundle.using(elements=[temporary_restraining_order_attachment],  filename="temporary_restraining_order", title="All forms to deliver to court", enabled=True)
+---
+# Each attachment defines a key in an ALDocument. We use `i` as the placeholder here so the same template is 
+# used for "preview" and "final" keys, and logic in the template checks the value of 
+# `i` to show or hide the user's signature
+attachment:
+  name: Post-interview-Instructions
+  filename: temporary_restraining_order_next_steps
+  docx template file: temporary_restraining_order_next_steps.docx
+  variable name: temporary_restraining_order_Post_interview_instructions[i]
+  skip undefined: True
+  tagged pdf: True
+---
+attachment:
+  name: temporary restraining order
+  filename: temporary_restraining_order
+  variable name: temporary_restraining_order_attachment[i]
+  skip undefined: True
+  docx template file: temporary_restraining_order.docx
+  tagged pdf: True
