@@ -1,0 +1,31 @@
+[build-system]
+requires = [
+    "setuptools>=80.9.0",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "docassemble.MAHousingTRO"
+version = "2.2.5"
+description = "This form lets you ask the court for emergency help if your landlord is not fixing bad conditions in your apartment, your utilities are shut off, or your landlord is doing something else to breach your right to \"quiet enjoyment\" of your home."
+readme = "README.md"
+authors = [
+    { name = "Quinten Steenhuis", email = "qsteenhuis@suffolk.edu" },
+]
+dependencies = [
+    "docassemble.ALMassachusetts @ git+https://github.com/suffolklitlab/docassemble-ALMassachusetts.git@main",
+    "docassemble.AssemblyLine @ git+https://github.com/SuffolkLITLab/docassemble-AssemblyLine.git@main",
+    "docassemble.MassAccess @ git+https://github.com/SuffolkLITLab/docassemble-MassAccess.git@main",
+]
+license = "MIT"
+license-files = [
+    "LICENSE",
+]
+
+[project.urls]
+Homepage = "https://courtformsonline.org"
+
+[tool.setuptools.packages.find]
+where = [
+    ".",
+]

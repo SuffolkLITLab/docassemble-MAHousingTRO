@@ -46,15 +46,14 @@ def find_package_data(where='.', package='', exclude=standard_exclude, exclude_d
 setup(name='docassemble.MAHousingTRO',
       version='2.2.5',
       description=('This form lets you ask the court for emergency help if your landlord is not fixing bad conditions in your apartment, your utilities are shut off, or your landlord is doing something else to breach your right to "quiet enjoyment" of your home.'),
-      long_description='# docassemble.MAHousingTRO\r\n\r\nThis form lets you ask the court for emergency help if your landlord is not fixing bad conditions in your apartment, your utilities are shut off, or your landlord is doing something else to breach your right to "quiet enjoyment" of your home.\r\n\r\n\r\n## Author\r\n\r\n- Quinten Steenhuis\r\n- Caroline Robinson\r\n- Kate Barry\r\n- Plocket\r\n- Lily Yang\r\n- Matthew Brooks\r\n- Lance Godard\r\n- Maeve MacGlinchey\r\n- Kendall Garner\r\n- David Colarusso\r\n',
+      long_description='# A Docassemble interview for a Massachusetts Request for a Temporary Restraining Order\r\n\r\nThis form lets you ask the court for emergency help if your landlord is not fixing bad conditions in your apartment, your utilities are shut off, or your landlord is doing something else to breach your right to "quiet enjoyment" of your home. The live interview can be found at [https://www.courtformsonline.org/housing/#TRO](https://www.courtformsonline.org/housing/#TRO).\r\n\r\n## Author\r\n\r\n- Quinten Steenhuis\r\n- Caroline Robinson\r\n- Kate Barry\r\n- Plocket\r\n- Lily Yang\r\n- Matthew Brooks\r\n- Lance Godard\r\n- Maeve MacGlinchey\r\n- Kendall Garner\r\n- David Colarusso\r\n',
       long_description_content_type='text/markdown',
       author='Quinten Steenhuis',
       author_email='qsteenhuis@suffolk.edu',
       license='MIT',
       url='https://courtformsonline.org',
       packages=find_namespace_packages(),
-      install_requires=['docassemble.ALMassachusetts>=0.1.1', 'docassemble.AssemblyLine>=2.14.1', 'docassemble.MassAccess>=0.3.0'],
+      install_requires=['docassemble.ALMassachusetts @ git+https://github.com/suffolklitlab/docassemble-ALMassachusetts.git@main', 'docassemble.AssemblyLine @ git+https://github.com/SuffolkLITLab/docassemble-AssemblyLine.git@main', 'docassemble.MassAccess @ git+https://github.com/SuffolkLITLab/docassemble-MassAccess.git@main'],
       zip_safe=False,
       package_data=find_package_data(where='docassemble/MAHousingTRO/', package='docassemble.MAHousingTRO'),
      )
-
