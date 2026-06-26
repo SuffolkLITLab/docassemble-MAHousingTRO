@@ -183,7 +183,6 @@ validation code: |
 comment: |
   This block includes the logic for standalone interviews.
   Delete mandatory: True to include in another interview
-mandatory: True
 code: |
   al_intro_screen
   verified_complaint_and_request_for_intro
@@ -198,6 +197,22 @@ code: |
       },
   )
   verified_complaint_and_request_for_download
+  temporary_restraining_order_download
+---
+code: |
+  al_intro_screen
+  temporary_restraining_order_intro
+  interview_order_temporary_restraining_order
+  signature_date
+  temporary_restraining_order_preview_question
+  # Store anonymous data for analytics / statistics
+  store_variables_snapshot(
+      persistent=True,
+      data={
+          "zip": showifdef("users[0].address.zip"),
+          "reached_interview_end": True,
+      },
+  )
   temporary_restraining_order_download
 ---
 id: Verified_complaint_and_request_for_emergency_relief
@@ -408,22 +423,39 @@ subquestion: |
   
 
   ${ al_user_bundle.send_button_html(show_editable_checkbox=True) }
+---
+id: download temporary_restraining_order
+event: temporary_restraining_order_download
+question: |
+  All done
+subquestion: |
+  Thank you ${users}. Your form is ready to download and deliver.
+  
+  View, download and send your form below. Click the "Edit answers" button to fix any mistakes.
+
+  ${ action_button_html(url_action('review_temporary_restraining_order'), label='Edit answers', color='info') }
+  
+  
+  ${ al_user_bundle.download_list_html() }
+  
+
+  ${ al_user_bundle.send_button_html(show_editable_checkbox=True) }
 
 progress: 100
 ---
-# ALDocument objects specify the metadata for each template
 objects:
+  # 1. Define the Verified Complaint Documents
   - verified_complaint_and_request_for_Post_interview_instructions: ALDocument.using(title="Instructions", filename="verified_complaint_and_request_for_next_steps.docx", enabled=True, has_addendum=False)
-  - verified_complaint_and_request_for_attachment: ALDocument.using(title="Verified complaint and request for emergency relief", filename="verified_complaint_and_request_for", enabled=True, has_addendum=False, )
+  - verified_complaint_and_request_for_attachment: ALDocument.using(title="Verified complaint and request for emergency relief", filename="verified_complaint_and_request_for", enabled=True, has_addendum=False)
+  
+  # 2. Define the Temporary Restraining Order Documents
+  - temporary_restraining_order_Post_interview_instructions: ALDocument.using(title="Instructions", filename="temporary_restraining_order_next_steps.docx", enabled=True, has_addendum=False)
+  - temporary_restraining_order_attachment: ALDocument.using(title="Temporary Restraining Order", filename="temporary_restraining_order", enabled=True, has_addendum=False)
+
+  # 3. Create the Consolidated 0Bundles
+  - al_user_bundle: ALDocumentBundle.using(elements=[verified_complaint_and_request_for_Post_interview_instructions, verified_complaint_and_request_for_attachment, temporary_restraining_order_Post_interview_instructions, temporary_restraining_order_attachment], filename="emergency_relief_and_tro_user_bundle", title="All forms to download for your records", enabled=True)
+  - al_court_bundle: ALDocumentBundle.using(elements=[verified_complaint_and_request_for_attachment, temporary_restraining_order_attachment], filename="emergency_relief_and_tro_court_bundle", title="All forms to deliver to court", enabled=True)
 ---
-# Bundles group the ALDocuments into separate downloads, such as for court and for the user
-objects:
-  - al_user_bundle: ALDocumentBundle.using(elements=[verified_complaint_and_request_for_Post_interview_instructions, verified_complaint_and_request_for_attachment], filename="verified_complaint_and_request_for", title="All forms to download for your records", enabled=True)
-  - al_court_bundle: ALDocumentBundle.using(elements=[verified_complaint_and_request_for_attachment],  filename="verified_complaint_and_request_for", title="All forms to deliver to court", enabled=True)
----
-# Each attachment defines a key in an ALDocument. We use `i` as the placeholder here so the same template is 
-# used for "preview" and "final" keys, and logic in the template checks the value of 
-# `i` to show or hide the user's signature
 attachment:
   name: Post-interview-Instructions
   filename: verified_complaint_and_request_for_next_steps
