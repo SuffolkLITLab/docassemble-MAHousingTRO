@@ -107,8 +107,8 @@ code: |
   docket_number
   nav.set_section("case_details")
   facts_description
-  other_issues
   utilities_needed
+  other_issues
   signature_date
   basic_questions_signature_flow
   plaintiffs[0].signature
@@ -245,10 +245,10 @@ id: Request to the Court
 question: |
   Request to the Court
 subquestion: |
-  Please be ready with the kinds of requests you want to make to the court.
+  What would you like the Court to do?
 fields:
-  - "Type of needed utility or service": utilities_needed_type
-  - "Type of other request to court": other_court_request_type
+  - "Provide my utilities": utilities_needed
+    datatype: yesno
 ---
 id: preview verified_complaint_and_request_for
 question: |

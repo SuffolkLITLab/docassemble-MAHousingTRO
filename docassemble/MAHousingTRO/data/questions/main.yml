@@ -81,8 +81,8 @@ objects:
 ---
 sections:
   - getting_started: Start
+  - people_in_the_case: People in the case
   - case_details: Case details
-  - people: People in the case
   - review_answers: Review answers
   - signature_and_submit: Sign and submit
   - download_next_steps: Download & next steps
@@ -94,6 +94,7 @@ id: interview_order_verified_complaint_and_request_for
 code: |
   # Set the allowed courts for this interview
   allowed_courts = ['Housing Court']
+  nav.set_section ("people_in_the_case")
   user_role = "plaintiff"
   user_ask_role = "plaintiff"
   plaintiffs.gather()
@@ -104,20 +105,22 @@ code: |
   defendants[0].address.address
   defendants[0].email
   defendants[0].phone_number
-  trial_court
   nav.set_section("case_details")
+  trial_court
   docket_number
   facts_description
-  utilities_needed_type
   utilities_needed
+  utilities_needed_type
   other_issues
   plaintiff_waiver_request
-  nav.set_section("review_and_sign")
+  nav.set_section("review_answers")
   temporary_restraining_order_preview_question
   verified_complaint_and_request_for_preview_question
+  nav.set_section("signature_and_submit")
   basic_questions_signature_flow
   plaintiffs[0].signature
   signature_date
+  nav.set_section("download_next_steps")
   interview_order_verified_complaint_and_request_for = True
   interview_order_temporary_restraining_order = True
 ---
@@ -256,6 +259,24 @@ fields:
   - "Description of events and facts": facts_description
     input type: area
 ---
+id: Request to the Court
+question: |
+  Request to the Court
+subquestion: |
+  What would you like the Court to do?
+fields:
+  - "Do you want your utilities turned back on?": utilities_needed
+    datatype: yesnoradio
+---
+id: Utilities Type
+question: |
+  Utilities
+subquestion: |
+  What utilities do you need turned back on?
+fields:
+  - "What type of utilities do you need?": utilities_needed_type
+if: utilities_needed == True
+---
 id: Describe Other Issues
 question: |
   Describe other violations
@@ -263,16 +284,6 @@ subquestion: |
   Are there other issues related to your case?
 fields:
   - "Type of other issue": other_issues_type
-    input type: area
----
-id: Request to the Court
-question: |
-  Request to the Court
-subquestion: |
-  Please be ready with the kinds of requests you want to make to the court.
-fields:
-  - "Type of needed utility or service": utilities_needed_type
-  - "Type of other request to court": other_court_request_type
     input type: area
 ---
 id: Court Fee Waiver
