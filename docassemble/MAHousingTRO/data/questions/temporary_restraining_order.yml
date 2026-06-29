@@ -114,7 +114,6 @@ code: |
   temporary_restraining_order_intro
   interview_order_temporary_restraining_order
   signature_date
-  temporary_restraining_order_preview_question
   # Store anonymous data for analytics / statistics
   store_variables_snapshot(
       persistent=True,
@@ -168,22 +167,6 @@ subquestion: Why would you like the Court waive the security requirement?
 fields:
   - "Provide explanation": plaintiff_waiver_request
     input type: area
---- 
-id: preview temporary_restraining_order
-question: |
-  Preview your form before you sign it
-subquestion: |
-  Here is a preview of the form you will sign on the next page.   
-  
-  ${ al_court_bundle.as_pdf(key='preview') }
-
-  Click the image to open it in a new tab. Click the "Edit answers" button
-  to edit your answers.
-
-  ${ action_button_html(url_action('review_temporary_restraining_order'), label='Edit answers', color='info') }
-  
-  Remember to come back to this window to continue and sign your form.
-continue button field: temporary_restraining_order_preview_question    
 ---
 code: |
   # This is a placeholder for the addresses that will be searched
