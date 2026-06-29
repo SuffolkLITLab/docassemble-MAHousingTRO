@@ -114,7 +114,7 @@ code: |
   signature_date
   basic_questions_signature_flow
   plaintiffs[0].signature
-  nav.set_section("review_and_sign")
+  signature_date
   interview_order_verified_complaint_and_request_for = True
   interview_order_temporary_restraining_order = True
 ---
@@ -202,9 +202,9 @@ code: |
 code: |
   al_intro_screen
   temporary_restraining_order_intro
+  temporary_restraining_order_preview_question
   interview_order_temporary_restraining_order
   signature_date
-  temporary_restraining_order_preview_question
   # Store anonymous data for analytics / statistics
   store_variables_snapshot(
       persistent=True,
@@ -296,9 +296,6 @@ subquestion: |
   Remember to come back to this window to continue and sign your form.
 continue button field: verified_complaint_and_request_for_preview_question    
 ---
-code: |
-  signature_fields = ['plaintiffs[0].signature']
----
 id: verified complaint and request for review screen
 event: review_verified_complaint_and_request_for
 question: |
@@ -349,6 +346,9 @@ review:
     button: |
       **Description of events and facts**:
       > ${ single_paragraph(facts_description) }
+---
+code: |
+  signature_fields = ['plaintiffs[0].signature']
 ---
 id: edit plaintiffs
 continue button field: plaintiffs.revisit
@@ -437,7 +437,6 @@ subquestion: |
   
   
   ${ al_user_bundle.download_list_html() }
-  
 
   ${ al_user_bundle.send_button_html(show_editable_checkbox=True) }
 
