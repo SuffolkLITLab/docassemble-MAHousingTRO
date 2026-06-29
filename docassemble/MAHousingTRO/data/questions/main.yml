@@ -113,7 +113,6 @@ code: |
   other_issues
   plaintiff_waiver_request
   nav.set_section("review_and_sign")
-  temporary_restraining_order_preview_question
   verified_complaint_and_request_for_preview_question
   basic_questions_signature_flow
   plaintiffs[0].signature
@@ -289,12 +288,16 @@ question: |
 subquestion: |
   Here is a preview of the form you will sign on the next page.   
   
-  ${ al_court_bundle.as_pdf(key='preview') }
-
-  Click the image to open it in a new tab. Click the "Edit answers" button
-  to edit your answers.
-
+  **Verified Complaint:**<br>
+  ${ verified_complaint_and_request_for_attachment.as_pdf(key='preview') }<br>
   ${ action_button_html(url_action('review_verified_complaint_and_request_for'), label='Edit answers', color='info') }
+
+  **Temporary Restraining Order:**<br>
+  ${ temporary_restraining_order_attachment.as_pdf(key='preview') }<br>
+  ${ action_button_html(url_action('review_temporary_restraining_order'), label='Edit answers', color='info') }
+ 
+  Click the images to open them in a new tab. Click the "Edit answers" button
+  to edit your answers.
   
   Remember to come back to this window to continue and sign your form.
 continue button field: verified_complaint_and_request_for_preview_question    
