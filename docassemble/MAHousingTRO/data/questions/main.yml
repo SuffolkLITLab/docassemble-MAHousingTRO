@@ -110,7 +110,6 @@ code: |
   docket_number
   facts_description
   utilities_needed
-  utilities_needed_type
   other_issues
   plaintiff_waiver_request
   nav.set_section("review_answers")
@@ -126,17 +125,12 @@ code: |
 ---
 code: |
   eviction_case_no = True
-  violation_breach_contract = True
-  other_issues = True
-  other_issues_type = "Yes"
   eviction_case_yes = True
   other_court_request = True
+  other_court_request_type = "Yes"
   stop_eviction = True
   stop_fail_repairs = True
   stop_return_belongings = True
-  utilities_needed = True
-  violation_bad_conditions = True
-  violation_interference_utilities = True
 ---
 id: your contact information
 question: |
@@ -249,6 +243,54 @@ code: |
   [user.address.address for user in users.complete_elements()]
   addresses_to_search = [user.address for user in users.complete_elements()]
 ---
+id: Landlord Violations
+question: |
+  Which of the following violations has your landlord done?
+subquestion: |
+  This form allows you to ask for emergency help for something your landlord did
+  or failed to do.
+fields:
+  - 'My landlord breached our contract': violation_breach_contract
+    datatype: yesno
+  - 'My utilities were interefered with': utilities_needed
+    datatype: yesno
+  - 'What utilities do you need turned back on?': utilities_needed_type
+    datatype: text
+    show if: utilities_needed
+  - 'There are bad conditions in my home': violation_bad_conditions
+    datatype: yesno
+    help: |
+      You can include anything here that is a breach of your to "implied warranty of habitability" of your home. It is an unwritten, unbreakable guarantee that your landlord must provide a home that is safe, decent, sanitary, and meets the minimum standards of the State Sanitary Code. It applies the moment you move in, whether you have a lease or not
+  - 'Other (breach of my quiet enjoyment)': other_issues
+    datatype: yesno
+  - 'Describe the other thing your landlord did wrong': other_issues_type
+    datatype: text
+    show if: other_issues
+    help: |
+      You can include anything here that is a breach of your right to
+      "quiet enjoyment" of your home. For example: an unsafe living condition;
+      an odor or noise that makes your home unlivable; or anything that 
+      makes you unable to use your home safely and peacefully.
+validation code: |
+  if not violation_breach_contract and not utilities_needed and not violation_bad_conditions and not other_issues:
+    validation_error("You must select at least one incident.")
+help: |
+  #### What is a breach of quiet enjoyment?
+  A breach of quiet enjoyment is something that your landlord did or should
+  have done that makes your home unlivable. This can cover a lot of different
+  issues. The problem needs to be serious and you can get help for issues
+  that the court agrees are emergencies with this form.
+  
+  Examples might include:
+  
+  * A sewage backup in your basement
+  * A strong unpleasant odor
+  * Constant noise at unreasonable times of day (remember, even if you are
+  working from home, permitted construction may still be allowed)
+  * Unsafe living conditions that your landlord isn't fixing
+  
+  [Read more](https://www.masslegalhelp.org/housing/lt1-chapter-8-rights-decent-place-live)
+---
 id: Tell Us About the Case
 question: |
   What happened between you and your landlord
@@ -256,33 +298,6 @@ subquestion: |
   Briefly describe the facts, date, and time of events (if any) that have occurred
 fields:
   - "Description of events and facts": facts_description
-    input type: area
----
-id: Request to the Court
-question: |
-  Request to the Court
-subquestion: |
-  What would you like the Court to do?
-fields:
-  - "Do you want your utilities turned back on?": utilities_needed
-    datatype: yesnoradio
----
-id: Utilities Type
-question: |
-  Utilities
-subquestion: |
-  What utilities do you need turned back on?
-fields:
-  - "What type of utilities do you need?": utilities_needed_type
-if: utilities_needed == True
----
-id: Describe Other Issues
-question: |
-  Describe other violations
-subquestion: |
-  Are there other issues related to your case?
-fields:
-  - "Type of other issue": other_issues_type
     input type: area
 ---
 id: Court Fee Waiver
