@@ -109,9 +109,12 @@ code: |
   docket_number
   facts_description
   utilities_needed_type
+  utilities_needed
   other_issues
   plaintiff_waiver_request
-  signature_date
+  nav.set_section("review_and_sign")
+  temporary_restraining_order_preview_question
+  verified_complaint_and_request_for_preview_question
   basic_questions_signature_flow
   plaintiffs[0].signature
   signature_date
