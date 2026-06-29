@@ -105,14 +105,13 @@ code: |
   defendants[0].email
   defendants[0].phone_number
   trial_court
-  docket_number
   nav.set_section("case_details")
+  docket_number
   facts_description
-  nav.set_section("review_and_sign")
+  utilities_needed_type
   other_issues
-  utilities_needed
-  temporary_restraining_order_preview_question
-  verified_complaint_and_request_for_preview_question
+  plaintiff_waiver_request
+  signature_date
   basic_questions_signature_flow
   plaintiffs[0].signature
   signature_date
@@ -198,6 +197,7 @@ code: |
       },
   )
   verified_complaint_and_request_for_download
+  temporary_restraining_order_download
 ---
 code: |
   al_intro_screen
@@ -251,14 +251,16 @@ subquestion: |
   Briefly describe the facts, date, and time of events (if any) that have occurred
 fields:
   - "Description of events and facts": facts_description
+    input type: area
 ---
 id: Describe Other Issues
 question: |
   Describe other violations
 subquestion: |
-  What other issues related to your case.
+  Are there other issues related to your case?
 fields:
   - "Type of other issue": other_issues_type
+    input type: area
 ---
 id: Request to the Court
 question: |
@@ -268,6 +270,15 @@ subquestion: |
 fields:
   - "Type of needed utility or service": utilities_needed_type
   - "Type of other request to court": other_court_request_type
+    input type: area
+---
+id: Court Fee Waiver
+question: |
+  Court Fee Waiver
+subquestion: Why would you like the Court waive the security requirement?
+fields:
+  - "Provide explanation": plaintiff_waiver_request
+    input type: area 
 ---
 id: preview verified_complaint_and_request_for
 question: |
