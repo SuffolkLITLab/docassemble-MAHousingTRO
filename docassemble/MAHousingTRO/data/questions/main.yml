@@ -114,6 +114,7 @@ code: |
   utilities_needed
   stop_fail_repairs
   plaintiff_waiver_request
+  issue_tro
   nav.set_section("review_answers")
   nav.set_section("review_and_sign")
   verified_complaint_and_request_for_preview_question
@@ -127,10 +128,6 @@ code: |
 ---
 code: |
   stop_eviction = True
-  stop_return_belongings = True
-  issue_son = True
-  issue_tro = True
-  request_pi = True
 ---
 id: ongoing eviction case
 mandatory: true
@@ -348,6 +345,8 @@ fields:
   - 'Make repairs to my home': stop_fail_repairs
     datatype: yesno
     default: ${ violation_bad_conditions }
+  - 'Return my belongings': stop_return_belongings
+    datatype: yesno
   - 'Other request for the court': other_court_request
     datatype: yesno
   - 'What do you want the court to do?': other_court_request_type
@@ -358,6 +357,20 @@ validation code: |
   if not showifdef('utilities_needed_type') and not showifdef('stop_fail_repairs') \
       and not showifdef('other_court_request'):
     validation_error("You must ask the court to do at least one thing.")
+---
+id: Mass Civ Pro
+mandatory: false
+question: |
+  Which of the following options (if any) would you like to ask the court to do?
+fields:
+  - 'Issue a Temporary Restraining Order (valid for 10 days only; may be requested without immediate notice to the other side)': issue_tro
+    datatype: yesno
+    
+  - 'Request a Preliminary Injunction (may be issued for longer than 10 days; notice to the other side is required)': request_pi
+    datatype: yesno
+    
+  - 'Issue a Short Order of Notice (a shortened notice period to the other side so the Court can hear this request)': issue_son
+    datatype: yesno
 ---
 id: Court Fee Waiver
 question: |
