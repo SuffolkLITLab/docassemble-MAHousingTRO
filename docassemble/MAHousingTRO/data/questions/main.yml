@@ -112,7 +112,7 @@ code: |
   docket_number
   facts_description
   utilities_needed
-  other_issues
+  stop_fail_repairs
   plaintiff_waiver_request
   nav.set_section("review_answers")
   nav.set_section("review_and_sign")
@@ -264,6 +264,15 @@ code: |
   [user.address.address for user in users.complete_elements()]
   addresses_to_search = [user.address for user in users.complete_elements()]
 ---
+id: Tell Us About the Case
+question: |
+  What happened between you and your landlord
+subquestion: |
+  Briefly describe the facts, date, and time of events (if any) that have occurred
+fields:
+  - "Description of events and facts": facts_description
+    input type: area
+---
 id: Landlord Violations
 question: |
   Which of the following violations has your landlord done?
@@ -273,6 +282,8 @@ subquestion: |
 fields:
   - 'My landlord breached our contract': violation_breach_contract
     datatype: yesno
+    help: |
+      Your landlord breaks the lease if they do not follow its terms. For example, say your lease allows you to have a dog. If your landlord later says no pets are allowed and tries to evict you, that is a breach of contract.
   - 'My utilities were interefered with': utilities_needed
     datatype: yesno
   - 'What utilities do you need turned back on?': utilities_needed_type
@@ -312,14 +323,44 @@ help: |
   
   [Read more](https://www.masslegalhelp.org/housing/lt1-chapter-8-rights-decent-place-live)
 ---
-id: Tell Us About the Case
+id: Court Request
 question: |
-  What happened between you and your landlord
+  What are you asking the court to do?
 subquestion: |
-  Briefly describe the facts, date, and time of events (if any) that have occurred
+  You told us about the following problems:
+
+  % if violation_breach_contract:
+  * Your landlord breached your lease agreement
+  % endif
+  % if utilities_needed:
+  * Your landlord shut off your utilities or did not pay for utilities they 
+  are required to pay
+  % endif
+  % if violation_bad_conditions:
+  * Your landlord breached your implied warranty of habitability by not making necessary repairs
+  % endif
+  % if other_issues:
+  * Other: ${other_issues_type}
+  % endif
+  
+  We have already checked the boxes that make sense based on your earlier
+  answers, but you should review and make any changes as needed.
+
+  Check the boxes that apply below.
 fields:
-  - "Description of events and facts": facts_description
-    input type: area
+  - 'Provide me utilities': utilities_needed
+    datatype: yesno
+    default: ${ utilities_needed }
+  - 'Make repairs to my home': stop_fail_repairs
+    datatype: yesno
+    default: ${ violation_bad_conditions }
+  - 'Stop breaching my quiet enjoyment': other_issues_type
+    datatype: yesno
+    default: ${other_issues}
+validation code: |
+  if not showifdef('utilities_needed_type') and not showifdef('stop_fail_repairs') \
+      and not showifdef('other_issues_type'):
+    validation_error("You must ask the court to do at least one thing.")
 ---
 id: Court Fee Waiver
 question: |
