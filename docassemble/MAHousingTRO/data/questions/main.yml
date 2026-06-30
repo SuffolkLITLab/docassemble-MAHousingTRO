@@ -348,6 +348,8 @@ fields:
   - 'Make repairs to my home': stop_fail_repairs
     datatype: yesno
     default: ${ violation_bad_conditions }
+  - 'Return my belongings': stop_return_belongings
+    datatype: yesno
   - 'Other request for the court': other_court_request
     datatype: yesno
   - 'What do you want the court to do?': other_court_request_type
