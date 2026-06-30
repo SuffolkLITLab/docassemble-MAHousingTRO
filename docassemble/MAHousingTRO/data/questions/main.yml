@@ -94,6 +94,8 @@ id: interview_order_verified_complaint_and_request_for
 code: |
   # Set the allowed courts for this interview
   allowed_courts = ['Housing Court']
+  eviction_order
+  eviction_case_yes
   nav.set_section ("people_in_the_case")
   user_role = "plaintiff"
   user_ask_role = "plaintiff"
@@ -124,8 +126,6 @@ code: |
   interview_order_temporary_restraining_order = True
 ---
 code: |
-  eviction_case_no = True
-  eviction_case_yes = True
   other_court_request = True
   other_court_request_type = "Yes"
   stop_eviction = True
@@ -134,6 +134,24 @@ code: |
   issue_son = True
   issue_tro = True
   request_pi = True
+---
+id: ongoing eviction case
+mandatory: true
+question: |
+  Is there an ongoing eviction case against you?
+fields:
+  - Is there an eviction order?: eviction_order
+    datatype: yesnoradio
+  - note: |
+      If there is an ongoing eviction case against you, and your landlord has a court order for eviction use MADE (insert link) or UpToCode for the best chance to stop them and if all else fails seek professional legal advice using (link to legal aid website)
+---
+code: |
+  if eviction_order:
+      eviction_case_yes = True
+      eviction_case_no = False
+  else:
+      eviction_case_yes = False
+      eviction_case_no = True
 ---
 id: your contact information
 question: |
