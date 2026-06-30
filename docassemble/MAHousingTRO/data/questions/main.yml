@@ -126,10 +126,7 @@ code: |
   interview_order_temporary_restraining_order = True
 ---
 code: |
-  other_court_request = True
-  other_court_request_type = "Yes"
   stop_eviction = True
-  stop_fail_repairs = True
   stop_return_belongings = True
   issue_son = True
   issue_tro = True
@@ -339,9 +336,6 @@ subquestion: |
   % if violation_bad_conditions:
   * Your landlord breached your implied warranty of habitability by not making necessary repairs
   % endif
-  % if other_issues:
-  * Other: ${other_issues_type}
-  % endif
   
   We have already checked the boxes that make sense based on your earlier
   answers, but you should review and make any changes as needed.
@@ -354,12 +348,15 @@ fields:
   - 'Make repairs to my home': stop_fail_repairs
     datatype: yesno
     default: ${ violation_bad_conditions }
-  - 'Stop breaching my quiet enjoyment': other_issues_type
+  - 'Other request for the court': other_court_request
     datatype: yesno
-    default: ${other_issues}
+  - 'What do you want the court to do?': other_court_request_type
+    datatype: text
+    show if: other_court_request
+    
 validation code: |
   if not showifdef('utilities_needed_type') and not showifdef('stop_fail_repairs') \
-      and not showifdef('other_issues_type'):
+      and not showifdef('other_court_request'):
     validation_error("You must ask the court to do at least one thing.")
 ---
 id: Court Fee Waiver
