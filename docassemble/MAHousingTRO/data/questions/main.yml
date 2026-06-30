@@ -131,6 +131,9 @@ code: |
   stop_eviction = True
   stop_fail_repairs = True
   stop_return_belongings = True
+  issue_son = True
+  issue_tro = True
+  request_pi = True
 ---
 id: your contact information
 question: |
