@@ -129,6 +129,18 @@ code: |
 code: |
   stop_eviction = True
 ---
+sets:
+  - other_parties[i].name.first
+  - other_parties[i].name.last
+  - other_parties[i].name.middle
+  - other_parties[i].name.suffix
+id: names of opposing parties
+question: |
+  Enter the name of who you rent from.
+fields:
+  - code: |
+      other_parties[i].name_fields(person_or_business="unsure")
+---
 id: ongoing eviction case
 mandatory: true
 question: |
