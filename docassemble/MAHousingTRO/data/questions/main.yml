@@ -14,7 +14,7 @@ metadata:
   can_I_use_this_form: |
     If you are a _____________, you can use this interview to ____________.
   before_you_start: |
-    This interview will help you ask the court for a verified complaint and request for emergency relief.
+    This interview will help you ask the court for a verified complaint and request for emergency relief. You can also issue a Temporary Restraining Order, Short Order of Notice, and request for a Preliminary Injunction.
     
     Before you get started, please gather:
     
@@ -96,6 +96,7 @@ code: |
   allowed_courts = ['Housing Court']
   eviction_order
   eviction_case_yes
+  temporary_restraining_order_intro
   nav.set_section ("people_in_the_case")
   user_role = "plaintiff"
   user_ask_role = "plaintiff"
@@ -116,7 +117,6 @@ code: |
   plaintiff_waiver_request
   issue_tro
   nav.set_section("review_answers")
-  nav.set_section("review_and_sign")
   verified_complaint_and_request_for_preview_question
   nav.set_section("signature_and_submit")
   basic_questions_signature_flow
@@ -158,6 +158,43 @@ code: |
   else:
       eviction_case_yes = False
       eviction_case_no = True
+---
+id: introduction to interview
+continue button field: temporary_restraining_order_intro
+question: |
+  Introduction
+subquestion: |
+  This interview will help you ask the court for a verified complaint and request for emergency relief. 
+  
+  This form will also help you issue a Temporary Restraining Order, Short Order of Notice and request the Court for a Preliminary Injunction. 
+  
+  To use this form, two things must be true:
+
+  1. This must be an **emergency**
+  2. Your landlord must have acted **without a court order**
+
+  Examples of this include:
+
+  * Illegally locking you out of your home
+  * Shutting off or not turning back on your utilities (water, gas, electric)
+  * Not making emergency repairs to your home
+  * Keeping your belongings form you
+  
+  Before you get started, please gather the following if you can:
+  
+  * Your lease 
+  * Photos or receipts about what happened
+  * Board of Health report (if you have one)
+  * Proof of income (to ask the court to waive the fees)
+  * Your landlord's information such as their contact information and address
+
+  If you do not have any of the above, you can still start the interview without them.
+  
+  When you are finished, you will need to:
+  
+  **Print, sign, and bring the forms to the court today.** This interview **does not give legal advice** and does not **file any of the forms for you.**
+
+  Most people take about 15-20 minutes to complete this interview.
 ---
 id: your contact information
 question: |
@@ -240,28 +277,6 @@ code: |
       },
   )
   temporary_restraining_order_download
----
-id: Verified_complaint_and_request_for_emergency_relief
-continue button field: verified_complaint_and_request_for_intro
-question: |
-  Verified complaint and request for emergency relief
-subquestion: |
-  This interview will help you ask the court for a verified complaint and request for emergency relief.
-  
-  Before you get started, please gather:
-  
-  1. 
-  1. 
-  1. 
-  
-  When you are finished, you will need to:
-  
-  1. 
-  1.
-
-  If you are a _____________, you can use this interview to ____________.
-
-  Most people take about 10 minutes to complete this interview.
 ---
 code: |
   # This is a placeholder for the addresses that will be searched
