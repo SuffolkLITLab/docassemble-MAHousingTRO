@@ -94,8 +94,9 @@ id: interview_order_verified_complaint_and_request_for
 code: |
   # Set the allowed courts for this interview
   allowed_courts = ['Housing Court']
-  eviction_order
-  eviction_case_yes
+  eviction_flow_complete
+  screening_finished
+  screening_2_finished
   temporary_restraining_order_intro
   nav.set_section ("people_in_the_case")
   user_role = "plaintiff"
@@ -129,6 +130,69 @@ code: |
 code: |
   stop_eviction = True
 ---
+id: first screening question
+question: |
+  Check all of the statements below that apply to your current situation.
+fields:
+  - no label: screening_options
+    datatype: checkboxes
+    choices:
+      - I live in Massachusetts: is_resident
+      - I rent my home from a landlord: is_tenant
+      - I am experiencing an issue with my housing related to my landlord: has_issue
+---
+id: first screening logic
+code: |
+  if not (screening_options['is_resident'] and screening_options['is_tenant'] and screening_options['has_issue']):
+      screening_1_warning_seen
+  
+  screening_finished = True
+---
+id: first eligibility warning
+question: |
+  Warning: You may not be eligible
+subquestion: |
+  Based on the requirements, you must meet all the criteria on the previous screen to be eligible for this specific legal relief. 
+
+  Because you did not select every option, the court may reject your filing. However, you are still allowed to proceed with this interview and generate your forms if you would like to continue.
+continue button field: screening_1_warning_seen
+---
+id: second screening question
+question: |
+  Do any of these apply to your situation?
+fields:
+  - no label: screening_exemptions
+    datatype: checkboxes
+    none of the above: True
+    choices:
+      - "There is a 209A stay-away order against me, or a roommate asked the landlord to keep me out for their safety": has_209a_or_roommate_issue
+      - I live in public or subsidized housing: is_public_housing_exclusion
+---
+id: second screening logic
+comment: This block invisibly handles the second screening flow
+code: |
+  if screening_exemptions.get('has_209a_or_roommate_issue') or screening_exemptions.get('is_public_housing_exclusion'):
+      screening_2_warning_seen
+  
+  screening_2_finished = True
+---
+id: second eligibility warning
+question: |
+  Warning: This may not be the right process for you
+subquestion: |
+  Based on your answers, this interview may not fit your situation:
+  
+  % if screening_exemptions.get('has_209a_or_roommate_issue'):
+  * **209A Order or Co-tenant Safety:** If there is a stay-away order or a roommate asked the landlord to keep you out, a lockout may actually be lawful. You should **talk to a lawyer first**.
+  % endif
+  
+  % if screening_exemptions.get('is_public_housing_exclusion'):
+  * **Public/Subsidized Housing Exclusion:** If you live in a public or subsidized development, that falls under a different form, not the forms this interview produces. You will need a **different process**.
+  % endif
+
+  However, you are still allowed to proceed with this interview and generate your forms if you would like to continue.
+continue button field: screening_2_warning_seen
+---
 sets:
   - other_parties[i].name.first
   - other_parties[i].name.last
@@ -136,28 +200,40 @@ sets:
   - other_parties[i].name.suffix
 id: names of opposing parties
 question: |
-  Enter the name of who you rent from.
+  Who is your landlord?
 fields:
   - code: |
       other_parties[i].name_fields(person_or_business="unsure")
 ---
 id: ongoing eviction case
-mandatory: true
 question: |
   Is there an ongoing eviction case against you?
 fields:
   - Is there an eviction order?: eviction_order
     datatype: yesnoradio
-  - note: |
-      If there is an ongoing eviction case against you, and your landlord has a court order for eviction use MADE (insert link) or UpToCode for the best chance to stop them and if all else fails seek professional legal advice using (link to legal aid website)
 ---
+id: eviction logic
 code: |
   if eviction_order:
+      eviction_warning_seen
       eviction_case_yes = True
       eviction_case_no = False
   else:
       eviction_case_yes = False
       eviction_case_no = True
+      
+  eviction_flow_complete = True
+---
+id: eviction warning screen
+question: |
+  Warning: Ongoing Eviction Case
+subquestion: |
+  If there is an ongoing eviction case against you, and your landlord has a court order for eviction, use MADE (insert link) or UpToCode for the best chance to stop them. 
+  
+  If all else fails, seek professional legal advice using (link to legal aid website).
+  
+  However, you are still allowed to proceed with this interview and generate your forms if you would like to continue.
+continue button field: eviction_warning_seen
 ---
 id: introduction to interview
 continue button field: temporary_restraining_order_intro
