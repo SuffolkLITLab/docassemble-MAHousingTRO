@@ -138,12 +138,13 @@ fields:
     datatype: checkboxes
     choices:
       - I live in Massachusetts: is_resident
+      - I am over 18: over_18
       - I rent my home from a landlord: is_tenant
       - I am experiencing an issue with my housing related to my landlord: has_issue
 ---
 id: first screening logic
 code: |
-  if not (screening_options['is_resident'] and screening_options['is_tenant'] and screening_options['has_issue']):
+  if not (screening_options['is_resident'] and screening_options['over_18'] and screening_options['is_tenant'] and screening_options['has_issue']):
       screening_1_warning_seen
   
   screening_finished = True
