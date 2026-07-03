@@ -443,6 +443,8 @@ subquestion: |
 
   Check the boxes that apply below.
 fields:
+  - 'Stop trying to evict me from my home': stop_eviction
+    datatype: yesno
   - 'Provide me utilities': utilities_needed
     datatype: yesno
     default: ${ utilities_needed }
