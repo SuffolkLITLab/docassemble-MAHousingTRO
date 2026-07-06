@@ -115,8 +115,9 @@ code: |
   facts_description
   utilities_needed
   stop_fail_repairs
-  plaintiff_waiver_request
   issue_tro
+  if issue_tro:
+      plaintiff_waiver_request
   nav.set_section("review_answers")
   verified_complaint_and_request_for_preview_question
   nav.set_section("signature_and_submit")
@@ -460,8 +461,7 @@ fields:
     show if: other_court_request
     
 validation code: |
-  if not showifdef('utilities_needed_type') and not showifdef('stop_fail_repairs') \
-      and not showifdef('other_court_request'):
+  if not showifdef('utilities_needed') and not showifdef('stop_fail_repairs') and not showifdef('stop_return_belongings') and not showifdef('other_court_request'):
     validation_error("You must ask the court to do at least one thing.")
 ---
 id: Mass Civ Pro
@@ -494,11 +494,13 @@ subquestion: |
   
   **Verified Complaint:**<br>
   ${ verified_complaint_and_request_for_attachment.as_pdf(key='preview') }<br>
-  ${ action_button_html(url_action('review_verified_complaint_and_request_for'), label='Edit answers', color='info') }
-
+  ${ action_button_html(url_action('review_verified_complaint_and_request_for'), label='Edit answers', color='info') }<br>
+  
+  % if issue_tro:
   **Temporary Restraining Order:**<br>
   ${ temporary_restraining_order_attachment.as_pdf(key='preview') }<br>
   ${ action_button_html(url_action('review_temporary_restraining_order'), label='Edit answers', color='info') }
+  % endif
  
   Click the images to open them in a new tab. Click the "Edit answers" button
   to edit your answers.
@@ -658,8 +660,8 @@ objects:
   - verified_complaint_and_request_for_attachment: ALDocument.using(title="Verified complaint and request for emergency relief", filename="verified_complaint_and_request_for", enabled=True, has_addendum=False)
   
   # 2. Define the Temporary Restraining Order Documents
-  - temporary_restraining_order_Post_interview_instructions: ALDocument.using(title="Instructions", filename="temporary_restraining_order_next_steps.docx", enabled=True, has_addendum=False)
-  - temporary_restraining_order_attachment: ALDocument.using(title="Temporary Restraining Order", filename="temporary_restraining_order", enabled=True, has_addendum=False)
+  - temporary_restraining_order_Post_interview_instructions: ALDocument.using(title="Instructions", filename="temporary_restraining_order_next_steps.docx", enabled=issue_tro, has_addendum=False)
+  - temporary_restraining_order_attachment: ALDocument.using(title="Temporary Restraining Order", filename="temporary_restraining_order", enabled=issue_tro, has_addendum=False)
 
   # 3. Create the Consolidated 0Bundles
   - al_user_bundle: ALDocumentBundle.using(elements=[verified_complaint_and_request_for_Post_interview_instructions, verified_complaint_and_request_for_attachment, temporary_restraining_order_Post_interview_instructions, temporary_restraining_order_attachment], filename="emergency_relief_and_tro_user_bundle", title="All forms to download for your records", enabled=True)
