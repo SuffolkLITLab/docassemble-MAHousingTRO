@@ -132,8 +132,6 @@ code: |
   verified_complaint_and_request_for_preview_question
   nav.set_section("signature_and_submit")
   basic_questions_signature_flow
-  plaintiffs[0].signature
-  signature_date
   nav.set_section("download_next_steps")
   interview_order_verified_complaint_and_request_for = True
   interview_order_temporary_restraining_order = True
@@ -398,9 +396,6 @@ fields:
       Your landlord breaks the lease if they do not follow its terms. For example, say your lease allows you to have a dog. If your landlord later says no pets are allowed and tries to evict you, that is a breach of contract.
   - 'My utilities were interefered with': utilities_needed
     datatype: yesno
-  - 'What utilities do you need turned back on?': utilities_needed_type
-    datatype: text
-    show if: utilities_needed
   - 'There are bad conditions in my home': violation_bad_conditions
     datatype: yesno
     help: |
@@ -462,6 +457,9 @@ fields:
   - 'Provide me utilities': utilities_needed
     datatype: yesno
     default: ${ utilities_needed }
+  - 'What utilities do you need back?': utilities_needed_type
+    datatype: text
+    show if: utilities_needed
   - 'Make repairs to my home': stop_fail_repairs
     datatype: yesno
     default: ${ violation_bad_conditions }
@@ -475,7 +473,7 @@ fields:
     
 validation code: |
   if not showifdef('utilities_needed') and not showifdef('stop_eviction') and not showifdef('stop_fail_repairs') and not showifdef('stop_return_belongings') and not showifdef('other_court_request'):
-    validation_error("You must ask the court to do at least one thing.")
+      validation_error("You must ask the court to do at least one thing.")
 ---
 id: Mass Civ Pro
 mandatory: false
