@@ -79,13 +79,22 @@ objects:
   - other_parties: ALPeopleList.using(ask_number=True,target_number=1)
   - users: ALPeopleList.using(ask_number=True,target_number=1)
 ---
-sections:
+features:
+  navigation: True
+---
+code: |
+  enable_al_nav_sections = True
+  al_parties_nav_section = "people_in_the_case"
+---
+reconsider: True
+variable name: al_nav_sections
+data:
   - getting_started: Start
   - people_in_the_case: People in the case
   - case_details: Case details
   - review_answers: Review answers
   - signature_and_submit: Sign and submit
-  - download_next_steps: Download & next steps
+  - download_next_steps: Download & next step
 ---
 comment: |
   Controls order and branching logic for questions specific to this form
@@ -93,6 +102,7 @@ id: interview_order_verified_complaint_and_request_for
 code: |
   # Set the allowed courts for this interview
   allowed_courts = ['Housing Court']
+  nav.set_section("getting_started")
   eviction_flow_complete
   screening_finished
   screening_2_finished
@@ -131,6 +141,7 @@ code: |
   stop_eviction = True
 ---
 id: first screening question
+section: getting_started
 question: |
   Check all of the statements below that apply to your current situation.
 fields:
@@ -229,9 +240,9 @@ id: eviction warning screen
 question: |
   Warning: Ongoing Eviction Case
 subquestion: |
-  If there is an ongoing eviction case against you, and your landlord has a court order for eviction, use MADE (insert link) or UpToCode for the best chance to stop them. 
+  If there is an ongoing eviction case against you, and your landlord has a court order for eviction, use [MADE](https://gbls.org/MADE) or [UpToCode](https://uptocode.org/) for the best chance to stop them. 
   
-  If all else fails, seek professional legal advice using (link to legal aid website).
+  If all else fails, seek professional [legal advice](https://masslrf.org/en/home).
   
   However, you are still allowed to proceed with this interview and generate your forms if you would like to continue.
 continue button field: eviction_warning_seen
@@ -274,6 +285,7 @@ subquestion: |
   Most people take about 15-20 minutes to complete this interview.
 ---
 id: your contact information
+section: people_in_the_case
 question: |
   % if al_person_answering == "user":
   What is your contact information?
@@ -363,6 +375,7 @@ code: |
   addresses_to_search = [user.address for user in users.complete_elements()]
 ---
 id: Tell Us About the Case
+section: case_details
 question: |
   What happened between you and your landlord
 subquestion: |
@@ -486,6 +499,7 @@ fields:
     input type: area 
 ---
 id: preview verified_complaint_and_request_for
+section: review_answers
 question: |
   Preview your form before you sign it
 subquestion: |
