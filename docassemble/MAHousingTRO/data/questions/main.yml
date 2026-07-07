@@ -473,7 +473,7 @@ fields:
     show if: other_court_request
     
 validation code: |
-  if not showifdef('utilities_needed') and not showifdef('stop_fail_repairs') and not showifdef('stop_return_belongings') and not showifdef('other_court_request'):
+  if not showifdef('utilities_needed') and not showifdef('stop_eviction') and not showifdef('stop_fail_repairs') and not showifdef('stop_return_belongings') and not showifdef('other_court_request'):
     validation_error("You must ask the court to do at least one thing.")
 ---
 id: Mass Civ Pro
@@ -503,10 +503,16 @@ help: |
 id: Court Fee Waiver
 question: |
   Court Fee Waiver
-subquestion: Why would you like the Court waive the security requirement?
+mandatory: false
 fields:
+  -  Would you like the Court waive the security requirement: waiver_yes_no
+     datatype: yesnoradio
   - "Provide explanation": plaintiff_waiver_request
     input type: area 
+    show if: waiver_yes_no
+validation code: |
+  if waiver_yes_no is False:
+    plaintiff_waiver_request = ""
 ---
 id: preview verified_complaint_and_request_for
 section: review_answers
