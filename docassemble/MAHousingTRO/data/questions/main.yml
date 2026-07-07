@@ -86,7 +86,6 @@ sections:
   - review_answers: Review answers
   - signature_and_submit: Sign and submit
   - download_next_steps: Download & next steps
-  - review_verified_complaint_and_request_for: Review your answers
 ---
 comment: |
   Controls order and branching logic for questions specific to this form
