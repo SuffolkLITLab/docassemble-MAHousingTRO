@@ -127,6 +127,7 @@ code: |
   issue_tro
   if issue_tro:
       plaintiff_waiver_request
+      plaintiff_request
   nav.set_section("review_answers")
   verified_complaint_and_request_for_preview_question
   nav.set_section("signature_and_submit")
@@ -513,6 +514,28 @@ fields:
 validation code: |
   if waiver_yes_no is False:
     plaintiff_waiver_request = ""
+---
+id: Your Request
+question: |
+  Your Request
+mandatory: false
+subquestion: |
+  You told us about the following problems:
+
+  % if violation_breach_contract:
+  * Your landlord breached your lease agreement
+  % endif
+  % if utilities_needed:
+  * Your landlord shut off your utilities or did not pay for utilities they 
+  are required to pay
+  % endif
+  % if violation_bad_conditions:
+  * Your landlord breached your implied warranty of habitability by not making necessary repairs
+  % endif  
+
+fields: 
+ - "**Based on these problems, please describe exactly what you want the court to order your landlord to do or stop doing.**": plaintiff_request
+   datatype: area
 ---
 id: preview verified_complaint_and_request_for
 section: review_answers
