@@ -195,7 +195,7 @@ subquestion: |
   Based on your answers, this interview may not fit your situation:
   
   % if screening_exemptions.get('has_209a_or_roommate_issue'):
-  * **209A Order or Co-tenant Safety:** If there is a stay-away order or a roommate asked the landlord to keep you out, a lockout may actually be lawful. You should **talk to a lawyer first**.
+  * **209A Order or Co-tenant Safety:** If there is a stay-away order or a roommate asked the landlord to keep you out, a lockout may actually be lawful. You should **talk to a [lawyer](https://masslrf.org/en/home) first**.
   % endif
   
   % if screening_exemptions.get('is_public_housing_exclusion'):
@@ -489,6 +489,16 @@ fields:
     
   - 'Issue a Short Order of Notice (a shortened notice period to the other side so the Court can hear this request)': issue_son
     datatype: yesno
+
+help: |
+  **Temporary Restraining Order (TRO)** <br>
+  A Temporary Restraining Order acts as an emergency "pause button" issued by a judge. In a housing context, you might request this if a landlord attempts an illegal eviction before a legal eviction process is complete. Because this is an emergency, the judge may grant it "ex parte," meaning they make the decision based on your request alone before the landlord has been notified or given the chance to appear in court. It is designed to preserve your safety and housing stability for up to 10 days until a formal hearing can take place.
+
+  **Preliminary Injunction** <br>
+  A Preliminary Injunction is a court order that lasts longer than a TRO and is used to maintain the current situation while your full case is being heard. In an eviction case, if you have a strong legal defense—such as proving that the eviction notice you received was invalid—a judge might grant this to allow you to remain in your home while the court takes the time to fully review the merits of your dispute. Unlike the TRO, this process requires that you provide formal notice to the landlord, ensuring they have the opportunity to show up, argue their side, and present evidence before the judge makes a decision.
+
+  **Short Order of Notice** <br>
+  A Short Order of Notice is a procedural tool used to bypass standard court timelines when a matter is urgent. Typically, courts require you to give a landlord a specific amount of advance notice before a hearing, but if you are facing immediate homelessness, you cannot wait that long. By requesting a Short Order of Notice, you are asking the court to shrink that waiting period, allowing the judge to hear your emergency request for protection much sooner than the standard schedule would allow.
 ---
 id: Court Fee Waiver
 question: |
