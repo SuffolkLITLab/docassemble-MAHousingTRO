@@ -1,0 +1,429 @@
+include:
+  - docassemble.AssemblyLine:assembly_line.yml
+  - docassemble.ALMassachusetts:al_massachusetts.yml
+  - docassemble.MassAccess:massaccess.yml
+---
+metadata:
+  title: >-
+    Verified complaint and request for emergency relief
+  short title: >-
+    Emergency Relief
+  description: |-
+    This interview helps someone in Massachusetts ask the court for a verified complaint and request for emergency relief.
+  can_I_use_this_form: |
+    If you are a _____________, you can use this interview to ____________.
+  before_you_start: |
+    This interview will help you ask the court for a verified complaint and request for emergency relief.
+    
+    Before you get started, please gather:
+    
+    1. 
+    1. 
+    1. 
+    
+    When you are finished, you will need to:
+    
+    1. 
+    1.
+  when_you_are_finished: |
+  efiling_enabled: False
+  integrated_efiling: False
+  integrated_email_filing: False
+  requires_notarization: False
+  unlisted: False
+  landing_page_url: >-
+    https://courtformsonline.org/
+  maturity: production
+  estimated_completion_minutes: 10
+  estimated_completion_delta: 5
+  LIST_topics:
+    - "CO-00-00-00-00"
+  tags:
+    - "CO-00-00-00-00"
+  authors:
+  original_form: []
+  original_form_published_on: ""
+  allowed_courts: 
+    - "Housing Court"
+  typical_role: "plaintiff"
+  al_weaver_version: "2.1.0"
+  generated_on: "2026-06-25"
+  languages:
+    - en
+  jurisdiction: "NAM-US-US+MA"
+  review_date: 2026-06-25
+  form_titles:
+    - Verified complaint and request for emergency relief
+  form_numbers: []
+  update_notes: |
+---
+code: |
+  # This controls the default country and list of states in address field questions
+  AL_DEFAULT_COUNTRY = "US"
+---
+code: |
+  # This controls the default state in address field questions
+  AL_DEFAULT_STATE = "MA"
+---
+code: |
+  github_repo_name =  'docassemble-VerifiedComplaintAndRequestFor'
+---
+code: |
+  interview_short_title = 'Ask the court for a verified complaint and request for emergency relief'
+---
+code: |
+  al_form_type = "starts_case" 
+---
+objects:
+  - other_parties: ALPeopleList.using(ask_number=True,target_number=1)
+  - users: ALPeopleList.using(ask_number=True,target_number=1)
+---
+sections:
+  - getting_started: Start
+  - case_details: Case details
+  - people: People in the case
+  - review_answers: Review answers
+  - signature_and_submit: Sign and submit
+  - download_next_steps: Download & next steps
+  - review_verified_complaint_and_request_for: Review your answers
+---
+comment: |
+  Controls order and branching logic for questions specific to this form
+id: interview_order_verified_complaint_and_request_for
+code: |
+  # Set the allowed courts for this interview
+  allowed_courts = ['Housing Court']
+  user_role = "plaintiff"
+  user_ask_role = "plaintiff"
+  plaintiffs.gather()
+  plaintiffs[0].phone_number
+  plaintiffs[0].address.address
+  plaintiffs[0].email
+  defendants.gather()
+  defendants[0].address.address
+  defendants[0].email
+  defendants[0].phone_number
+  trial_court
+  docket_number
+  nav.set_section("case_details")
+  facts_description
+  utilities_needed
+  other_issues
+  signature_date
+  basic_questions_signature_flow
+  plaintiffs[0].signature
+  nav.set_section("review_and_sign")
+  interview_order_verified_complaint_and_request_for = True
+---
+code: |
+  eviction_case_no = True
+  violation_breach_contract = True
+  other_issues = True
+  other_issues_type = "Yes"
+  eviction_case_yes = True
+  other_court_request = True
+  stop_eviction = True
+  stop_fail_repairs = True
+  stop_return_belongings = True
+  utilities_needed = True
+  violation_bad_conditions = True
+  violation_interference_utilities = True
+---
+id: your contact information
+question: |
+  % if al_person_answering == "user":
+  What is your contact information?
+  % else:
+  What is ${ users[0] }'s contact information?
+  % endif
+subquestion: |
+  % if al_person_answering == "user":
+  Include at least **one** way to reach you other than by mail.
+  % else:
+  Include at least **one** way to reach ${ users[0] } other than by mail.
+  % endif
+
+  ${ collapse_template(why_contact_info_needed_template) }
+fields:  
+  - Phone number: users[0].phone_number
+    required: False
+    datatype: al_international_phone
+  - Email address: users[0].email    
+    datatype: email
+    required: False
+  - label: |
+      % if al_person_answering == "user":
+      Other ways to reach you
+      % else:
+      Other ways to reach ${ users[0] }
+      % endif
+    field: users[0].other_contact_method
+    input type: area
+    required: False
+    help: |
+      If you do not have a phone number or email, provide
+      specific contact instructions. For example, use a friend's phone number.
+      But the friend must be someone you can rely on to give you a
+      message.
+validation code: |
+  if (
+    not showifdef("users[0].phone_number")
+    and (not showifdef("users[0].mobile_number"))
+    and (not showifdef("users[0].email"))
+    and (not showifdef("users[0].other_contact_method"))
+  ):
+    validation_error(
+      word("You need to provide at least one contact method."),
+      field="users[0].other_contact_method",
+    )
+---
+comment: |
+  This block includes the logic for standalone interviews.
+  Delete mandatory: True to include in another interview
+mandatory: True
+code: |
+  al_intro_screen
+  verified_complaint_and_request_for_intro
+  interview_order_verified_complaint_and_request_for
+  signature_date
+  # Store anonymous data for analytics / statistics
+  store_variables_snapshot(
+      persistent=True,
+      data={
+          "zip": showifdef("users[0].address.zip"),
+          "reached_interview_end": True,
+      },
+  )
+  verified_complaint_and_request_for_download
+---
+id: Verified_complaint_and_request_for_emergency_relief
+continue button field: verified_complaint_and_request_for_intro
+question: |
+  Verified complaint and request for emergency relief
+subquestion: |
+  This interview will help you ask the court for a verified complaint and request for emergency relief.
+  
+  Before you get started, please gather:
+  
+  1. 
+  1. 
+  1. 
+  
+  When you are finished, you will need to:
+  
+  1. 
+  1.
+
+  If you are a _____________, you can use this interview to ____________.
+
+  Most people take about 10 minutes to complete this interview.
+---
+code: |
+  # This is a placeholder for the addresses that will be searched
+  # for matching address to court. Edit if court venue is based on 
+  # a different address than the user's
+  [user.address.address for user in users.complete_elements()]
+  addresses_to_search = [user.address for user in users.complete_elements()]
+---
+id: Tell Us About the Case
+question: |
+  What happened between you and your landlord
+subquestion: |
+  Briefly describe the facts, date, and time of events (if any) that have occurred
+fields:
+  - "Description of events and facts": facts_description
+---
+id: Describe Other Issues
+question: |
+  Describe other violations
+subquestion: |
+  What other issues related to your case.
+fields:
+  - "Type of other issue": other_issues_type
+---
+id: Request to the Court
+question: |
+  Request to the Court
+subquestion: |
+  What would you like the Court to do?
+fields:
+  - "Provide my utilities": utilities_needed
+    datatype: yesno
+---
+id: preview verified_complaint_and_request_for
+question: |
+  Preview your form before you sign it
+subquestion: |
+  Here is a preview of the form you will sign on the next page.   
+  
+  ${ al_court_bundle.as_pdf(key='preview') }
+
+  Click the image to open it in a new tab. Click the "Edit answers" button
+  to edit your answers.
+
+  ${ action_button_html(url_action('review_verified_complaint_and_request_for'), label='Edit answers', color='info') }
+  
+  Remember to come back to this window to continue and sign your form.
+continue button field: verified_complaint_and_request_for_preview_question    
+---
+code: |
+  signature_fields = ['plaintiffs[0].signature']
+---
+id: verified complaint and request for review screen
+event: review_verified_complaint_and_request_for
+question: |
+  Review your answers
+review:
+  - Edit: plaintiffs.revisit
+    button: |
+      **Plaintiffs**
+
+      % for item in plaintiffs:
+        * ${ item }
+      % endfor
+  - Edit: defendants.revisit
+    button: |
+      **Defendants**
+
+      % for item in defendants:
+        * ${ item }
+      % endfor
+  - Edit: trial_court
+    button: |
+      **Trial court**
+  
+      % if defined("trial_court.name.first"):
+      * name: ${ trial_court.name_full() }
+      % endif
+  - Edit: utilities_needed_type
+    button: |
+      **Type of needed utility or service**:
+      ${ utilities_needed_type }
+  - Edit: other_court_request_type
+    button: |
+      **Type of other request to court**:
+      ${ other_court_request_type }
+  - Edit: other_issues_type
+    button: |
+      **Type of other issue**:
+      ${ other_issues_type }
+  - Edit: signature_date
+    button: |
+      **Date of Signature**:
+      ${ signature_date }
+  - Edit: docket_number
+    button: |
+      **Docket number**:
+      ${ docket_number }
+  - Edit: facts_description
+    button: |
+      **Description of events and facts**:
+      > ${ single_paragraph(facts_description) }
+---
+id: edit plaintiffs
+continue button field: plaintiffs.revisit
+question: |
+  Edit plaintiffs
+subquestion: |
+  ${ plaintiffs.table }
+
+  ${ plaintiffs.add_action() }
+---
+table: plaintiffs.table
+rows: plaintiffs
+columns:
+  - Address: |
+      row_item.address.block() if defined("row_item.address.address") else ""
+  - Name: |
+      row_item.name_full() if defined("row_item.name.first") else ""
+  - Phone number: |
+      row_item.phone_number if defined("row_item.phone_number") else ""
+  - Signature: |
+      row_item.signature if defined("row_item.signature") else ""
+  - Email: |
+      row_item.email if defined("row_item.email") else ""
+edit:
+  - address.address
+  - name.first
+  - phone_number
+  - signature
+  - email
+confirm: True
+---
+id: edit defendants
+continue button field: defendants.revisit
+question: |
+  Edit defendants
+subquestion: |
+  ${ defendants.table }
+
+  ${ defendants.add_action() }
+---
+table: defendants.table
+rows: defendants
+columns:
+  - Name: |
+      row_item.name_full() if defined("row_item.name.first") else ""
+  - Phone number: |
+      row_item.phone_number if defined("row_item.phone_number") else ""
+  - Address: |
+      row_item.address.block() if defined("row_item.address.address") else ""
+  - Email: |
+      row_item.email if defined("row_item.email") else ""
+edit:
+  - name.first
+  - phone_number
+  - address.address
+  - email
+confirm: True
+---
+id: download verified_complaint_and_request_for
+event: verified_complaint_and_request_for_download
+question: |
+  All done
+subquestion: |
+  Thank you ${users}. Your form is ready to download and deliver.
+  
+  View, download and send your form below. Click the "Edit answers" button to fix any mistakes.
+
+  ${ action_button_html(url_action('review_verified_complaint_and_request_for'), label='Edit answers', color='info') }
+  
+  
+  ${ al_user_bundle.download_list_html() }
+  
+
+  ${ al_user_bundle.send_button_html(show_editable_checkbox=True) }
+
+progress: 100
+---
+# ALDocument objects specify the metadata for each template
+objects:
+  - verified_complaint_and_request_for_Post_interview_instructions: ALDocument.using(title="Instructions", filename="verified_complaint_and_request_for_next_steps.docx", enabled=True, has_addendum=False)
+  - verified_complaint_and_request_for_attachment: ALDocument.using(title="Verified complaint and request for emergency relief", filename="verified_complaint_and_request_for", enabled=True, has_addendum=False, )
+---
+# Bundles group the ALDocuments into separate downloads, such as for court and for the user
+objects:
+  - al_user_bundle: ALDocumentBundle.using(elements=[verified_complaint_and_request_for_Post_interview_instructions, verified_complaint_and_request_for_attachment], filename="verified_complaint_and_request_for", title="All forms to download for your records", enabled=True)
+  - al_court_bundle: ALDocumentBundle.using(elements=[verified_complaint_and_request_for_attachment],  filename="verified_complaint_and_request_for", title="All forms to deliver to court", enabled=True)
+---
+# Each attachment defines a key in an ALDocument. We use `i` as the placeholder here so the same template is 
+# used for "preview" and "final" keys, and logic in the template checks the value of 
+# `i` to show or hide the user's signature
+attachment:
+  name: Post-interview-Instructions
+  filename: verified_complaint_and_request_for_next_steps
+  docx template file: verified_complaint_and_request_for_next_steps.docx
+  variable name: verified_complaint_and_request_for_Post_interview_instructions[i]
+  skip undefined: True
+  tagged pdf: True
+---
+attachment:
+  name: verified complaint and request for
+  filename: verified_complaint_and_request_for
+  variable name: verified_complaint_and_request_for_attachment[i]
+  skip undefined: True
+  docx template file: verified_complaint_and_request_for.docx
+  tagged pdf: True
+
+
+
