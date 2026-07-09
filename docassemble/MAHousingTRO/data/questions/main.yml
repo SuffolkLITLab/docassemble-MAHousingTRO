@@ -16,7 +16,7 @@ metadata:
   before_you_start: |
     This interview will help you ask the court for a verified complaint and request for emergency relief. You can also issue a Temporary Restraining Order, Short Order of Notice, and request for a Preliminary Injunction.
     
-    Before you get started, please gather:
+    Before you get started, gather:
     
     1. 
     1. 
@@ -48,7 +48,7 @@ metadata:
     - "Housing Court"
   typical_role: "plaintiff"
   al_weaver_version: "2.1.0"
-  generated_on: "2026-06-25"
+  created_on: "2026-06-25"
   languages:
     - en
   jurisdiction: "NAM-US-US+MA"
@@ -144,7 +144,8 @@ section: getting_started
 question: |
   Check all of the statements below that apply to your current situation.
 fields:
-  - no label: screening_options
+  - label: Statements that apply to your situation
+    field: screening_options
     datatype: checkboxes
     choices:
       - I live in Massachusetts: is_resident
@@ -163,20 +164,21 @@ id: first eligibility warning
 question: |
   Warning: You may not be eligible
 subquestion: |
-  Based on the requirements, you must meet all the criteria on the previous screen to be eligible for this specific legal relief. 
+  Based on the requirements, you must meet all the criteria on the last screen to be eligible for this specific legal relief. 
 
-  Because you did not select every option, the court may reject your filing. However, you are still allowed to proceed with this interview and generate your forms if you would like to continue.
+  Because you did not select every option, the court may reject your filing. However, you are still allowed to continue with this interview and create your forms if you would like to continue.
 continue button field: screening_1_warning_seen
 ---
 id: second screening question
 question: |
   Do any of these apply to your situation?
 fields:
-  - no label: screening_exemptions
+  - label: Statements that apply to your situation
+    field: screening_exemptions
     datatype: checkboxes
     none of the above: True
     choices:
-      - "There is a 209A stay-away order against me, or a roommate asked the landlord to keep me out for their safety": has_209a_or_roommate_issue
+      - "There is a 209A stay away order against me, or a roommate asked the landlord to keep me out for their safety": has_209a_or_roommate_issue
       - I live in public or subsidized housing: is_public_housing_exclusion
 ---
 id: second screening logic
@@ -194,14 +196,14 @@ subquestion: |
   Based on your answers, this interview may not fit your situation:
   
   % if screening_exemptions.get('has_209a_or_roommate_issue'):
-  * **209A Order or Co-tenant Safety:** If there is a stay-away order or a roommate asked the landlord to keep you out, a lockout may actually be lawful. You should **talk to a [lawyer](https://masslrf.org/en/home) first**.
+  * **209A Order or Co-tenant Safety:** If there is a stay away order or a roommate asked the landlord to keep you out, a lockout may actually be lawful. You should **talk to a [lawyer](https://masslrf.org/en/home) first**.
   % endif
   
   % if screening_exemptions.get('is_public_housing_exclusion'):
   * **Public/Subsidized Housing Exclusion:** If you live in a public or subsidized development, that falls under a different form, not the forms this interview produces. You will need a **different process**.
   % endif
 
-  However, you are still allowed to proceed with this interview and generate your forms if you would like to continue.
+  However, you are still allowed to continue with this interview and create your forms if you would like to continue.
 continue button field: screening_2_warning_seen
 ---
 sets:
@@ -243,7 +245,7 @@ subquestion: |
   
   If all else fails, seek professional [legal advice](https://masslrf.org/en/home).
   
-  However, you are still allowed to proceed with this interview and generate your forms if you would like to continue.
+  However, you are still allowed to continue with this interview and create your forms if you would like to continue.
 continue button field: eviction_warning_seen
 ---
 id: introduction to interview
@@ -267,7 +269,7 @@ subquestion: |
   * Not making emergency repairs to your home
   * Keeping your belongings form you
   
-  Before you get started, please gather the following if you can:
+  Before you get started, gather the following if you can:
   
   * Your lease 
   * Proof of income (to ask the court to waive the fees)
@@ -314,7 +316,7 @@ fields:
     input type: area
     required: False
     help: |
-      If you do not have a phone number or email, provide
+      If you do not have a phone number or email, Give
       specific contact instructions. For example, use a friend's phone number.
       But the friend must be someone you can rely on to give you a
       message.
@@ -326,7 +328,7 @@ validation code: |
     and (not showifdef("users[0].other_contact_method"))
   ):
     validation_error(
-      word("You need to provide at least one contact method."),
+      word("You need to Give at least one contact method."),
       field="users[0].other_contact_method",
     )
 ---
@@ -392,12 +394,12 @@ fields:
     datatype: yesno
     help: |
       Your landlord breaks the lease if they do not follow its terms. For example, say your lease allows you to have a dog. If your landlord later says no pets are allowed and tries to evict you, that is a breach of contract.
-  - 'My utilities were interefered with': utilities_needed
+  - 'My utilities were interfered with': utilities_needed
     datatype: yesno
   - 'There are bad conditions in my home': violation_bad_conditions
     datatype: yesno
     help: |
-      You can include anything here that is a breach of your to "implied warranty of habitability" of your home. It is an unwritten, unbreakable guarantee that your landlord must provide a home that is safe, decent, sanitary, and meets the minimum standards of the State Sanitary Code. It applies the moment you move in, whether you have a lease or not
+      You can include anything here that is a breach of your to "implied warranty of habitability" of your home. It is an unwritten, unbreakable guarantee that your landlord must Give a home that is safe, decent, sanitary, and meets the minimum standards of the State Sanitary Code. It applies the moment you move in, even if you have a lease or do not
   - 'Other (breach of my quiet enjoyment)': other_issues
     datatype: yesno
   - 'Describe the other thing your landlord did wrong': other_issues_type
@@ -424,7 +426,7 @@ help: |
   * A strong unpleasant odor
   * Constant noise at unreasonable times of day (remember, even if you are
   working from home, permitted construction may still be allowed)
-  * Unsafe living conditions that your landlord isn't fixing
+  * Unsafe living conditions that your landlord is not fixing
   
   [Read more](https://www.masslegalhelp.org/housing/lt1-chapter-8-rights-decent-place-live)
 ---
@@ -452,7 +454,7 @@ subquestion: |
 fields:
   - 'Stop trying to evict me from my home': stop_eviction
     datatype: yesno
-  - 'Provide me utilities': utilities_needed
+  - 'Give me utilities': utilities_needed
     datatype: yesno
     default: ${ utilities_needed }
   - 'What utilities do you need back?': utilities_needed_type
@@ -492,10 +494,10 @@ help: |
   A Temporary Restraining Order acts as an emergency "pause button" issued by a judge. In a housing context, you might request this if a landlord attempts an illegal eviction before a legal eviction process is complete. Because this is an emergency, the judge may grant it "ex parte," meaning they make the decision based on your request alone before the landlord has been notified or given the chance to appear in court. It is designed to preserve your safety and housing stability for up to 10 days until a formal hearing can take place.
 
   **Preliminary Injunction** <br>
-  A Preliminary Injunction is a court order that lasts longer than a TRO and is used to maintain the current situation while your full case is being heard. In an eviction case, if you have a strong legal defense—such as proving that the eviction notice you received was invalid—a judge might grant this to allow you to remain in your home while the court takes the time to fully review the merits of your dispute. Unlike the TRO, this process requires that you provide formal notice to the landlord, ensuring they have the opportunity to show up, argue their side, and present evidence before the judge makes a decision.
+  A Preliminary Injunction is a court order that lasts longer than a TRO and is used to maintain the current situation while your full case is being heard. In an eviction case, if you have a strong legal defense, such as proving that the eviction notice you got was invalid, a judge might grant this to allow you to remain in your home while the court takes the time to fully review the merits of your dispute. Unlike the TRO, this process requires that you Give formal notice to the landlord, ensuring they have the opportunity to show up, argue their side, and present evidence before the judge makes a decision.
 
   **Short Order of Notice** <br>
-  A Short Order of Notice is a procedural tool used to bypass standard court timelines when a matter is urgent. Typically, courts require you to give a landlord a specific amount of advance notice before a hearing, but if you are facing immediate homelessness, you cannot wait that long. By requesting a Short Order of Notice, you are asking the court to shrink that waiting period, allowing the judge to hear your emergency request for protection much sooner than the standard schedule would allow.
+  A Short Order of Notice is a procedural tool used to bypass standard court timeline when a matter is urgent. Typically, courts require you to give a landlord a specific amount of advance notice before a hearing, but if you are facing immediate homelessness, you cannot wait that long. By requesting a Short Order of Notice, you are asking the court to shrink that waiting period, allowing the judge to hear your emergency request for protection much sooner than the standard schedule would allow.
 ---
 id: Court Fee Waiver
 question: |
@@ -504,7 +506,7 @@ mandatory: false
 fields:
   -  Would you like the Court waive the security requirement: waiver_yes_no
      datatype: yesnoradio
-  - "Provide explanation": plaintiff_waiver_request
+  - "Give explanation": plaintiff_waiver_request
     input type: area 
     show if: waiver_yes_no
 validation code: |
@@ -530,7 +532,7 @@ subquestion: |
   % endif  
 
 fields: 
- - "**Based on these problems, please describe exactly what you want the court to order your landlord to do or stop doing.**": plaintiff_request
+ - "**Based on these problems, describe exactly what you want the court to order your landlord to do or stop doing.**": plaintiff_request
    datatype: area
 ---
 id: preview verified_complaint_and_request_for
