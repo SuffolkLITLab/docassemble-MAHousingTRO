@@ -1,6 +1,7 @@
 include:
   - docassemble.AssemblyLine:assembly_line.yml
   - docassemble.ALMassachusetts:al_massachusetts.yml
+  - docassemble.MassAccess:massaccess.yml
   - docassemble.ALAffidavitOfIndigency:affidavit_body.yml
   - docassemble.MAHousingTRO:temporary_restraining_order.yml
 ---
