@@ -227,16 +227,22 @@ fields:
   - code: |
       other_parties[i].name_fields(person_or_business="unsure")
 ---
-id: ongoing eviction case
+id: active eviction case
 question: |
-  Is there an ongoing eviction case against you?
+  Is there an active eviction case against you?
 fields:
-  - Is there an eviction order?: eviction_order
+  - no label: eviction_order
     datatype: yesnoradio
+---
+id: active eviction order
+question: |
+  Is there an active eviction order against you?
+fields:
+  - no label: has_eviction_order
 ---
 id: eviction logic
 code: |
-  if eviction_order:
+  if eviction_order or has_eviction_order:
       eviction_warning_seen
       eviction_case_yes = True
       eviction_case_no = False
@@ -248,35 +254,31 @@ code: |
 ---
 id: eviction warning screen
 question: |
-  Warning: Ongoing Eviction Case
+  Warning: Ongoing eviction case
 subquestion: |
-  If there is an ongoing eviction case against you, and your landlord has a court order for eviction, use [MADE](https://gbls.org/MADE) or [UpToCode](https://uptocode.org/) for the best chance to stop them. 
-  
-  If all else fails, seek professional [legal advice](https://masslrf.org/en/home).
+  If there is an active eviction case against you, and your landlord has a court order for eviction, use [MADE](https://gbls.org/MADE) or [UpToCode](https://uptocode.org/) for the best chance to stop them. If all else fails seek professional [legal advice](https://masslrf.org/en/home).
+
+  If there is an active eviction order against you seek professional [legal advice](https://masslrf.org/en/home).
   
   However, you are still allowed to proceed with this interview and generate your forms if you would like to continue.
 continue button field: eviction_warning_seen
 ---
+terms: 
+  housing emergency: |
+    This could be your landlord changing the locks without telling you, your landlord refusing to make necessary repairs, your utilities were shut off, there is a safety or health risk in your home. 
+  court order: |
+    If you are currently in a court proceeding with your landlord, and the judge has ordered your landlord to do something against you such as eviction. 
+---
 id: introduction to interview
 continue button field: temporary_restraining_order_intro
 question: |
-  Introduction
+  Get Emergency Housing Relief
 subquestion: |
-  This interview will help you ask the court for a verified complaint and request for emergency relief. 
-  
-  This form will also help you issue a Temporary Restraining Order, Short Order of Notice and request the Court for a Preliminary Injunction. 
-  
-  To use this form, two things must be true:
+  This interview will help you file a complaint to get emergency housing relief and issue a temporary restraining order, along with a preliminary injunction and short order notice form.
 
-  1. This must be an **emergency**
-  2. Your landlord must have acted **without a court order**
-
-  Examples of this include:
-
-  * Illegally locking you out of your home
-  * Shutting off or not turning back on your utilities (water, gas, electric)
-  * Not making emergency repairs to your home
-  * Keeping your belongings form you
+  ## Is this an emergency we can help you with?
+  1. Are you face a {housing emergency}?
+  2. Did your landlord act without a {court order}?
   
   Before you get started, please gather the following if you can:
   
@@ -285,12 +287,17 @@ subquestion: |
   * Your landlord's information such as their contact information and address
 
   If you do not have any of the above, you can still start the interview without them.
-  
-  When you are finished, you will need to:
-  
-  **Print, sign, and bring the forms to the court today.** This interview **does not give legal advice** and does not **file any of the forms for you.**
+
+  If your landlord has already filed an eviction case against you, this may not be the right form for your situation.
+  If you are in immediate danger, call 911. If you need help but this isn't an emergency filing, [legal aid / tenant hotline link] may be able to assist.
 
   Most people take about 15-20 minutes to complete this interview.
+help: |
+  This interview can help you if you are facing:
+  *An illegal lockout (your landlord changing the locks without telling you)
+  *Your utilities were shut off
+  *Your landlord took your belongings
+  *Your landlord refuses to make necessary repairs
 ---
 id: your contact information
 section: people_in_the_case
