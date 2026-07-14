@@ -1,8 +1,8 @@
 include:
   - docassemble.AssemblyLine:assembly_line.yml
   - docassemble.ALMassachusetts:al_massachusetts.yml
-  - docassemble.MassAccess:massaccess.yml
-  - temporary_restraining_order.yml
+  - docassemble.ALAffidavitOfIndigency:affidavit_body.yml
+  - docassemble.MAHousingTRO:temporary_restraining_order.yml
 ---
 metadata:
   title: >-
@@ -136,8 +136,18 @@ code: |
   interview_order_verified_complaint_and_request_for = True
   interview_order_temporary_restraining_order = True
 ---
-code: |
-  stop_eviction = True
+id: docket number
+question: |
+  What is the docket number for your case?
+fields:
+  - I don't know the docket number: dont_know_docket_number
+    datatype: yesno    
+  - Docket number: docket_number
+    hide if: dont_know_docket_number
+validation code: |
+  # This should be safe to 
+  if dont_know_docket_number:
+    docket_number = '' 
 ---
 id: first screening question
 section: getting_started
@@ -734,7 +744,7 @@ attachment:
 attachment:
   name: Post-interview-Instructions
   filename: temporary_restraining_order_next_steps
-  docx template file: temporary_restraining_order_next_steps.docx
+  docx template file: docassemble.MAHousingTRO:temporary_restraining_order_next_steps.docx
   variable name: temporary_restraining_order_Post_interview_instructions[i]
   skip undefined: True
   tagged pdf: True
@@ -744,5 +754,5 @@ attachment:
   filename: temporary_restraining_order
   variable name: temporary_restraining_order_attachment[i]
   skip undefined: True
-  docx template file: temporary_restraining_order.docx
+  docx template file: docassemble.MAHousingTRO:temporary_restraining_order.docx
   tagged pdf: True
