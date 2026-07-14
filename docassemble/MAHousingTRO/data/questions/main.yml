@@ -239,6 +239,13 @@ question: |
   Is there an active eviction order against you?
 fields:
   - no label: has_eviction_order
+    datatype: yesnoradio
+---
+id: active eviction order
+question: |
+  Is there an active eviction order against you?
+fields:
+  - no label: has_eviction_order
 ---
 id: eviction logic
 code: |
