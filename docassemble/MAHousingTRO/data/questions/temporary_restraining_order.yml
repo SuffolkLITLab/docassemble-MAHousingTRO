@@ -95,7 +95,7 @@ code: |
   # plaintiffs[0].phone_number
   defendants.gather()
   set_progress(20)
-  civil_action_number
+  docket_number
   plaintiff_request
   plaintiff_waiver_request
   set_progress(40)
@@ -145,12 +145,6 @@ subquestion: |
   If you are a _____________, you can use this interview to ____________.
 
   Most people take about 10 minutes to complete this interview.
----
-id: Civil Action Case Information
-question: |
-  Civil Action Case Information
-fields:
-  - "What is your civil action case number?": civil_action_number
 ---
 id: Your Request
 question: |
@@ -203,10 +197,10 @@ review:
       % if defined("trial_court.division"):
       * division: ${ trial_court.division }
       % endif
-  - Edit: civil_action_number
+  - Edit: docket_number
     button: |
-      **Civil action case number**:
-      ${ civil_action_number }
+      **docket number **:
+      ${ docket_number }
   - Edit: plaintiff_waiver_request
     button: |
       **Reason for waiver request**:
