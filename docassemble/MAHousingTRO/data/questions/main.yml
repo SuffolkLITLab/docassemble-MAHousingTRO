@@ -227,16 +227,23 @@ fields:
   - code: |
       other_parties[i].name_fields(person_or_business="unsure")
 ---
-id: ongoing eviction case
+id: active eviction case
 question: |
-  Is there an ongoing eviction case against you?
+  Is there an active eviction case against you?
 fields:
-  - Is there an eviction order?: eviction_order
+  - no label: eviction_order
+    datatype: yesnoradio
+---
+id: active eviction order
+question: |
+  Is there an active eviction order against you?
+fields:
+  - no label: has_eviction_order
     datatype: yesnoradio
 ---
 id: eviction logic
 code: |
-  if eviction_order:
+  if eviction_order or has_eviction_order:
       eviction_warning_seen
       eviction_case_yes = True
       eviction_case_no = False
@@ -248,11 +255,11 @@ code: |
 ---
 id: eviction warning screen
 question: |
-  Warning: Ongoing Eviction Case
+  Warning: Ongoing eviction case
 subquestion: |
-  If there is an ongoing eviction case against you, and your landlord has a court order for eviction, use [MADE](https://gbls.org/MADE) or [UpToCode](https://uptocode.org/) for the best chance to stop them. 
-  
-  If all else fails, seek professional [legal advice](https://masslrf.org/en/home).
+  If there is an active eviction case against you, and your landlord has a court order for eviction, use [MADE](https://gbls.org/MADE) or [UpToCode](https://uptocode.org/) for the best chance to stop them. If all else fails seek professional [legal advice](https://masslrf.org/en/home).
+
+  If there is an active eviction order against you seek professional [legal advice](https://masslrf.org/en/home).
   
   However, you are still allowed to proceed with this interview and generate your forms if you would like to continue.
 continue button field: eviction_warning_seen
