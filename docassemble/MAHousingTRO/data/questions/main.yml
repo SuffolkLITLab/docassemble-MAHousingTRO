@@ -137,6 +137,12 @@ code: |
   interview_order_verified_complaint_and_request_for = True
   interview_order_temporary_restraining_order = True
 ---
+code: |
+  btn_made = '<a href="https://gbls.org/MADE" target="_blank" class="btn btn-primary">MADE</a>'
+  btn_uptocode = '<a href="https://uptocode.org/" target="_blank" class="btn btn-info">UpToCode</a>'
+  btn_legal_services = '<a href="https://masslrf.org/en/home" target="_blank" class="btn btn-warning">Get Legal Advice</a>'
+  btn_public_housing = '<a href="https://www.mass.gov/how-to/report-hlc-program-concerns" target="_blank" class="btn btn-warning">Public Housing Help</a>'
+---
 id: docket number
 question: |
   What is the docket number for your case?
@@ -263,15 +269,15 @@ subquestion: |
   Based on your answers, this interview may not fit your situation:
   
   % if defined('has_209a_order') and has_209a_order:
-  * **209A Order:** If there is a stay-away order against you, a lockout may actually be lawful. You should **talk to a [lawyer](https://masslrf.org/en/home) first**.
+  * **209A Order:** If there is a stay-away order against you, a lockout may actually be lawful. You should **talk to a lawyer first**. ${ btn_legal_services }
   % endif
   
   % if defined('roommate_requested_lockout') and roommate_requested_lockout:
-  * **Co-tenant Safety:** If a roommate asked the landlord to keep you out for their safety, a lockout may be lawful. You should **talk to a [lawyer](https://masslrf.org/en/home) first**.
+  * **Co-tenant Safety:** If a roommate asked the landlord to keep you out for their safety, a lockout may be lawful. You should **talk to a lawyer first**. ${ btn_legal_services }
   % endif
   
   % if defined('is_public_housing_exclusion') and is_public_housing_exclusion:
-  * **Public/Subsidized Housing Exclusion:** If you live in a public or subsidized development, that falls under a different form, not the forms this interview produces. You will need a **different process**.
+  * **Public/Subsidized Housing Exclusion:** If you live in a public or subsidized development, that falls under a different form, not the forms this interview produces. You will need a **different process**. ${ btn_public_housing }
   % endif
 
   However, you are still allowed to proceed with this interview and generate your forms if you would like to continue.
@@ -319,9 +325,11 @@ id: eviction warning screen
 question: |
   Warning: Ongoing eviction case
 subquestion: |
-  If there is an active eviction case against you, and your landlord has a court order for eviction, use [MADE](https://gbls.org/MADE) or [UpToCode](https://uptocode.org/) for the best chance to stop them. If all else fails seek professional [legal advice](https://masslrf.org/en/home).
+  If there is an active eviction case against you, and your landlord has a court order for eviction, use ${ btn_made } or ${ btn_uptocode } for the best chance to stop them. 
 
-  If there is an active eviction order against you seek professional [legal advice](https://masslrf.org/en/home).
+   If all else fails or there is active eviction order against you seek professional legal advice: 
+  
+  ${ btn_legal_services }
   
   However, you are still allowed to proceed with this interview and generate your forms if you would like to continue.
 continue button field: eviction_warning_seen
@@ -352,7 +360,7 @@ subquestion: |
   If you do not have any of the above, you can still start the interview without them.
 
   If your landlord has already filed an eviction case against you, this may not be the right form for your situation.
-  If you are in immediate danger, call 911. If you need help but this isn't an emergency filing, [legal aid / tenant hotline link] may be able to assist.
+  If you are in immediate danger, call 911. If you need help but this isn't an emergency filing, ${ btn_legal_services } may be able to assist.
 
   Most people take about 15-20 minutes to complete this interview.
 help: |
