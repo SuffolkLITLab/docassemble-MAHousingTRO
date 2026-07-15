@@ -104,10 +104,11 @@ code: |
   # Set the allowed courts for this interview
   allowed_courts = ['Housing Court']
   nav.set_section("getting_started")
+  in_danger
+  temporary_restraining_order_intro
   eviction_flow_complete
   screening_finished
   screening_2_finished
-  temporary_restraining_order_intro
   nav.set_section ("people_in_the_case")
   user_role = "plaintiff"
   user_ask_role = "plaintiff"
@@ -347,11 +348,12 @@ question: |
 subquestion: |
   This interview will help you file a complaint to get emergency housing relief and issue a temporary restraining order, along with a preliminary injunction and short order notice form.
 
-  ## Is this an emergency we can help you with?
+  ###Does this apply to you?
   1. Are you face a {housing emergency}?
   2. Did your landlord act without a {court order}?
   
-  Before you get started, please gather the following if you can:
+ 
+  ###What to gather before you start
   
   * Your lease 
   * Proof of income (to ask the court to waive the fees)
@@ -359,16 +361,30 @@ subquestion: |
 
   If you do not have any of the above, you can still start the interview without them.
 
-  If your landlord has already filed an eviction case against you, this may not be the right form for your situation.
-  If you are in immediate danger, call 911. If you need help but this isn't an emergency filing, ${ btn_legal_services } may be able to assist.
-
+  ###Time estimate
   Most people take about 15-20 minutes to complete this interview.
-help: |
-  This interview can help you if you are facing:
-  *An illegal lockout (your landlord changing the locks without telling you)
-  *Your utilities were shut off
-  *Your landlord took your belongings
-  *Your landlord refuses to make necessary repairs
+  
+  If you need help but this isn't an emergency filing, ${ btn_legal_services } may be able to assist.
+---
+id: immediate danger resources
+question: | 
+  Are You In Danger Right Now?
+subquestion: |
+  ####Watch for these warning signs:
+  * Sparks or the smell of smoke (fire risk)
+  * The smell of gas (gas leak)
+  * Large cracks in your cieling or floors
+  
+fields: 
+  - no label: in_danger
+    datatype: yesnoradio
+  - note: |
+      **In case of an emergency, please contact 911.**
+
+      <div class="d-flex gap-2">
+        <a href="https://www.mass.gov/orgs/emergency-housing-help-programs" class="btn btn-warning">Find Emergency Housing<a/a>
+      </div>
+    show if: in_danger
 ---
 id: your contact information
 section: people_in_the_case
@@ -424,6 +440,7 @@ comment: |
   Delete mandatory: True to include in another interview
 code: |
   al_intro_screen
+  in_danger
   verified_complaint_and_request_for_intro
   interview_order_verified_complaint_and_request_for
   signature_date
