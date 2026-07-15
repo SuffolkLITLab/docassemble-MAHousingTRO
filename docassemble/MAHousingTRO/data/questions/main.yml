@@ -150,23 +150,48 @@ validation code: |
   if dont_know_docket_number:
     docket_number = '' 
 ---
-id: first screening question
+objects:
+  - screening_1_warning: DADict
+  - screening_2_warning: DADict
+---
+id: first screening question - resident
 section: getting_started
 question: |
-  Check all of the statements below that apply to your current situation.
+  Do you live in Massachusetts?
 fields:
-  - no label: screening_options
-    datatype: checkboxes
-    choices:
-      - I live in Massachusetts: is_resident
-      - I am over 18: over_18
-      - I rent my home from a landlord: is_tenant
-      - I am experiencing an issue with my housing related to my landlord: has_issue
+  - no label: is_resident
+    datatype: yesnoradio
+---
+id: first screening question - age
+section: getting_started
+question: |
+  Are you over 18?
+fields:
+  - no label: over_18
+    datatype: yesnoradio
+---
+id: first screening question - tenant
+section: getting_started
+question: |
+  Do you rent your home from a landlord?
+fields:
+  - no label: is_tenant
+    datatype: yesnoradio
 ---
 id: first screening logic
+comment: Asks the question first, then seeks a unique dictionary variable to force the shared warning screen to appear immediately.
 code: |
-  if not (screening_options['is_resident'] and screening_options['over_18'] and screening_options['is_tenant'] and screening_options['has_issue']):
-      screening_1_warning_seen
+  is_resident
+  if not is_resident:
+      screening_1_warning['resident']
+      
+  over_18
+  if not over_18:
+      screening_1_warning['age']
+      
+  is_tenant
+  if not is_tenant:
+      screening_1_warning['tenant']
   
   screening_finished = True
 ---
@@ -174,27 +199,60 @@ id: first eligibility warning
 question: |
   Warning: You may not be eligible
 subquestion: |
-  Based on the requirements, you must meet all the criteria on the previous screen to be eligible for this specific legal relief. 
+  Based on the requirements, you must meet all the criteria on the previous screens to be eligible for this specific legal relief. 
 
-  Because you did not select every option, the court may reject your filing. However, you are still allowed to proceed with this interview and generate your forms if you would like to continue.
-continue button field: screening_1_warning_seen
+  Here is why you may not be eligible based on your answers so far:
+  
+  % if defined('is_resident') and not is_resident:
+  * **Not a Massachusetts Resident:** This process is specifically for Massachusetts residents.
+  % endif
+  
+  % if defined('over_18') and not over_18:
+  * **Under 18:** You must be a legal adult (18 or older) to file these forms.
+  % endif
+  
+  % if defined('is_tenant') and not is_tenant:
+  * **Not a Tenant:** This process is designed for tenants renting from a landlord.
+  % endif
+  
+
+  Because you did not meet these requirements, the court may reject your filing. However, you are still allowed to proceed with this interview and generate your forms if you would like to continue.
+continue button field: screening_1_warning[i]
 ---
-id: second screening question
+id: second screening question - 209a
 question: |
-  Do any of these apply to your situation?
+  Is there a 209A stay-away order against you?
 fields:
-  - no label: screening_exemptions
-    datatype: checkboxes
-    none of the above: True
-    choices:
-      - "There is a 209A stay-away order against me, or a roommate asked the landlord to keep me out for their safety": has_209a_or_roommate_issue
-      - I live in public or subsidized housing: is_public_housing_exclusion
+  - no label: has_209a_order
+    datatype: yesnoradio
+---
+id: second screening question - roommate
+question: |
+  Did a roommate ask the landlord to keep you out for their safety?
+fields:
+  - no label: roommate_requested_lockout
+    datatype: yesnoradio
+---
+id: second screening question - public housing
+question: |
+  Do you live in public or subsidized housing?
+fields:
+  - no label: is_public_housing_exclusion
+    datatype: yesnoradio
 ---
 id: second screening logic
-comment: This block invisibly handles the second screening flow
 code: |
-  if screening_exemptions.get('has_209a_or_roommate_issue') or screening_exemptions.get('is_public_housing_exclusion'):
-      screening_2_warning_seen
+  has_209a_order
+  if has_209a_order:
+      screening_2_warning['209a']
+      
+  roommate_requested_lockout
+  if roommate_requested_lockout:
+      screening_2_warning['roommate']
+      
+  is_public_housing_exclusion
+  if is_public_housing_exclusion:
+      screening_2_warning['public']
   
   screening_2_finished = True
 ---
@@ -204,16 +262,20 @@ question: |
 subquestion: |
   Based on your answers, this interview may not fit your situation:
   
-  % if screening_exemptions.get('has_209a_or_roommate_issue'):
-  * **209A Order or Co-tenant Safety:** If there is a stay-away order or a roommate asked the landlord to keep you out, a lockout may actually be lawful. You should **talk to a [lawyer](https://masslrf.org/en/home) first**.
+  % if defined('has_209a_order') and has_209a_order:
+  * **209A Order:** If there is a stay-away order against you, a lockout may actually be lawful. You should **talk to a [lawyer](https://masslrf.org/en/home) first**.
   % endif
   
-  % if screening_exemptions.get('is_public_housing_exclusion'):
+  % if defined('roommate_requested_lockout') and roommate_requested_lockout:
+  * **Co-tenant Safety:** If a roommate asked the landlord to keep you out for their safety, a lockout may be lawful. You should **talk to a [lawyer](https://masslrf.org/en/home) first**.
+  % endif
+  
+  % if defined('is_public_housing_exclusion') and is_public_housing_exclusion:
   * **Public/Subsidized Housing Exclusion:** If you live in a public or subsidized development, that falls under a different form, not the forms this interview produces. You will need a **different process**.
   % endif
 
   However, you are still allowed to proceed with this interview and generate your forms if you would like to continue.
-continue button field: screening_2_warning_seen
+continue button field: screening_2_warning[i]
 ---
 sets:
   - other_parties[i].name.first
@@ -240,12 +302,6 @@ question: |
 fields:
   - no label: has_eviction_order
     datatype: yesnoradio
----
-id: active eviction order
-question: |
-  Is there an active eviction order against you?
-fields:
-  - no label: has_eviction_order
 ---
 id: eviction logic
 code: |
