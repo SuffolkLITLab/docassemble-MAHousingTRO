@@ -91,13 +91,13 @@ code: |
   user_role = "plaintiff"
   user_ask_role = "plaintiff"
   plaintiffs.gather()
-  # plaintiffs[0].address.address
-  # plaintiffs[0].phone_number
   defendants.gather()
   set_progress(20)
   docket_number
   plaintiff_request
-  plaintiff_waiver_request
+  waiver_yes_no
+  if waiver_yes_no:
+      plaintiff_waiver_request
   set_progress(40)
   trial_court.address.city
   set_progress(60)
@@ -156,11 +156,20 @@ fields:
 ---
 id: Court Fee Waiver
 question: |
-  Court Fee Waiver
-subquestion: Why would you like the Court waive the security requirement?
+  Why would you like the Court waive the {security} requirement?
 fields:
-  - "Provide explanation": plaintiff_waiver_request
+  - "Do you want to ask the judge waive the security?": waiver_yes_no
+    datatype: yesnoradio
+    help: |
+      This is not a fee. You are not paying the court. The money is set aside in case the judge later decides the order was a mistake and your landlord lost money because of it. If it is found to be proper the court will return the deposit to you.
+  - "Explain to the court why you can't put down a security?": plaintiff_waiver_request
     input type: area
+    show if: waiver_yes_no
+    help: |
+      If you cannot afford this, you can ask the judge to skip it. Many tenants do. You just have to tell the judge why.
+terms: 
+  security: |
+    When filing in Massachusetts the court orders your landlord to do something right away, the court can ask you to put down money first. This money is called "security".
 ---
 code: |
   # This is a placeholder for the addresses that will be searched
@@ -201,10 +210,14 @@ review:
     button: |
       **docket number **:
       ${ docket_number }
-  - Edit: plaintiff_waiver_request
+  - Edit: waiver_yes_no
     button: |
       **Reason for waiver request**:
+      % if waiver_yes_no:
       > ${ single_paragraph(plaintiff_waiver_request) }
+      % else:
+      > No waiver requested.
+      % endif
   - Edit: plaintiff_request
     button: |
       **Request from plaintiff**:
