@@ -57,7 +57,7 @@ code: |
   github_repo_name =  'docassemble-VerifiedComplaintAndRequestFor'
 ---
 code: |
-  interview_short_title = 'File a complaint and request a temporary restraining housing order.'
+  interview_short_title = 'Get Emergency Housing Relief'
 ---
 code: |
   al_form_type = "starts_case" 
@@ -77,6 +77,8 @@ reconsider: True
 variable name: al_nav_sections
 data:
   - getting_started: Start
+  - introduction_screen: Introduction
+  - eligibility_screening: Eligibility
   - people_in_the_case: People in the case
   - case_details: Case details
   - review_answers: Review answers
@@ -92,7 +94,9 @@ code: |
   allowed_courts = ['Housing Court']
   nav.set_section("getting_started")
   in_danger
+  nav.set_section("introduction_screen")
   temporary_restraining_order_intro
+  nav.set_section("eligibility_screening")
   eviction_flow_complete
   screening_finished
   screening_2_finished
@@ -136,24 +140,102 @@ code: |
   interview_order_verified_complaint_and_request_for = True
   interview_order_temporary_restraining_order = True
 ---
+comment: |
+  This block includes the logic for standalone interviews.
+  Delete mandatory: True to include in another interview
+code: |
+  al_intro_screen
+  in_danger
+  verified_complaint_and_request_for_intro
+  interview_order_verified_complaint_and_request_for
+  signature_date
+  # Store anonymous data for analytics / statistics
+  store_variables_snapshot(
+      persistent=True,
+      data={
+          "zip": showifdef("users[0].address.zip"),
+          "reached_interview_end": True,
+      },
+  )
+  verified_complaint_and_request_for_download
+  temporary_restraining_order_download
+---
+code: |
+  al_intro_screen
+  in_danger
+  temporary_restraining_order_intro
+  interview_order_temporary_restraining_order
+  signature_date
+  # Store anonymous data for analytics / statistics
+  store_variables_snapshot(
+      persistent=True,
+      data={
+          "zip": showifdef("users[0].address.zip"),
+          "reached_interview_end": True,
+      },
+  )
+  temporary_restraining_order_download
+---
+code: |
+  # This is a placeholder for the addresses that will be searched
+  # for matching address to court. Edit if court venue is based on 
+  # a different address than the user's
+  [user.address.address for user in users.complete_elements()]
+  addresses_to_search = [user.address for user in users.complete_elements()]
+---
 code: |
   btn_made = '<a href="https://gbls.org/MADE" target="_blank" class="btn btn-primary">MADE</a>'
   btn_uptocode = '<a href="https://uptocode.org/" target="_blank" class="btn btn-info">UpToCode</a>'
   btn_legal_services = '<a href="https://masslrf.org/en/home" target="_blank" class="btn btn-warning">Get Legal Advice</a>'
   btn_public_housing = '<a href="https://www.mass.gov/how-to/report-hlc-program-concerns" target="_blank" class="btn btn-warning">Public Housing Help</a>'
+  btn_docket_number = '<a href="https://www.mass.gov/info-details/how-to-search-court-dockets?_gl=1*1t4lg0v*_ga*Mjc1NTYwNDQxLjE3NDE2MjkwMjA.*_" target="blank" class="btn btn-info">Find Your Docket Number</a>'
 ---
-id: docket number
+id: immediate danger resources
+question: | 
+  Are You In Danger Right Now?
+subquestion: |
+  ####Watch for these warning signs:
+  * Sparks or the smell of smoke (fire risk)
+  * The smell of gas (gas leak)
+  * Large cracks in your cieling or floors
+  
+fields: 
+  - no label: in_danger
+    datatype: yesnoradio
+  - note: |
+      **In case of an emergency, please contact 911.**
+
+      <div class="d-flex gap-2">
+        <a href="https://www.mass.gov/orgs/emergency-housing-help-programs" class="btn btn-warning">Find Emergency Housing<a/a>
+      </div>
+    show if: in_danger
+---
+id: introduction to interview
+continue button field: temporary_restraining_order_intro
 question: |
-  What is the docket number for your case?
-fields:
-  - I don't know the docket number: dont_know_docket_number
-    datatype: yesno    
-  - Docket number: docket_number
-    hide if: dont_know_docket_number
-validation code: |
-  # This should be safe to 
-  if dont_know_docket_number:
-    docket_number = '' 
+  What does this interview do?
+subquestion: |
+  This interview will help you file a complaint to get emergency housing relief and issue a temporary restraining order, along with a preliminary injunction and short order notice form.
+
+  ####Does this apply to you?
+  1. Are you face a {housing emergency}?
+  2. Did your landlord act without a {court order}?
+  
+  ####What to gather before you start
+  
+  * Your lease 
+  * Proof of income (if you decide to waive the security deposit)
+  * Your landlord's information such as their contact information and address
+  * The docket number (if you do not have one, you can still continue with the interview)<br>
+  [find your docket number](https://www.mass.gov/info-details/how-to-search-court-dockets?_gl=1*1t4lg0v*_ga*Mjc1NTYwNDQxLjE3NDE2MjkwMjA.*_)&nbsp;<sup>:up-right-from-square:&nbsp;(opens in new tab)</sup>
+   
+  If you do not have any of the above, you can still start the interview without them. Most people take about 15-20 minutes to complete this interview.
+
+  ####After you finish this interview
+  When you are finished, you will need to file this petition with the Court, either by eFile using a valid email address or in person with the Clerk's office.
+
+  #####Not the right form for you?
+  If you need help but this isn't an emergency situation, ${ btn_legal_services } may be able to assist.
 ---
 objects:
   - screening_1_warning: DADict
@@ -339,51 +421,6 @@ terms:
   court order: |
     If you are currently in a court proceeding with your landlord, and the judge has ordered your landlord to do something against you such as eviction. 
 ---
-id: introduction to interview
-continue button field: temporary_restraining_order_intro
-question: |
-  Get Emergency Housing Relief
-subquestion: |
-  This interview will help you file a complaint to get emergency housing relief and issue a temporary restraining order, along with a preliminary injunction and short order notice form.
-
-  ###Does this apply to you?
-  1. Are you face a {housing emergency}?
-  2. Did your landlord act without a {court order}?
-  
- 
-  ###What to gather before you start
-  
-  * Your lease 
-  * Proof of income (to ask the court to waive the fees)
-  * Your landlord's information such as their contact information and address
-
-  If you do not have any of the above, you can still start the interview without them.
-
-  ###Time estimate
-  Most people take about 15-20 minutes to complete this interview.
-  
-  If you need help but this isn't an emergency filing, ${ btn_legal_services } may be able to assist.
----
-id: immediate danger resources
-question: | 
-  Are You In Danger Right Now?
-subquestion: |
-  ####Watch for these warning signs:
-  * Sparks or the smell of smoke (fire risk)
-  * The smell of gas (gas leak)
-  * Large cracks in your cieling or floors
-  
-fields: 
-  - no label: in_danger
-    datatype: yesnoradio
-  - note: |
-      **In case of an emergency, please contact 911.**
-
-      <div class="d-flex gap-2">
-        <a href="https://www.mass.gov/orgs/emergency-housing-help-programs" class="btn btn-warning">Find Emergency Housing<a/a>
-      </div>
-    show if: in_danger
----
 id: your contact information
 section: people_in_the_case
 question: |
@@ -433,47 +470,18 @@ validation code: |
       field="users[0].other_contact_method",
     )
 ---
-comment: |
-  This block includes the logic for standalone interviews.
-  Delete mandatory: True to include in another interview
-code: |
-  al_intro_screen
-  in_danger
-  verified_complaint_and_request_for_intro
-  interview_order_verified_complaint_and_request_for
-  signature_date
-  # Store anonymous data for analytics / statistics
-  store_variables_snapshot(
-      persistent=True,
-      data={
-          "zip": showifdef("users[0].address.zip"),
-          "reached_interview_end": True,
-      },
-  )
-  verified_complaint_and_request_for_download
-  temporary_restraining_order_download
----
-code: |
-  al_intro_screen
-  temporary_restraining_order_intro
-  interview_order_temporary_restraining_order
-  signature_date
-  # Store anonymous data for analytics / statistics
-  store_variables_snapshot(
-      persistent=True,
-      data={
-          "zip": showifdef("users[0].address.zip"),
-          "reached_interview_end": True,
-      },
-  )
-  temporary_restraining_order_download
----
-code: |
-  # This is a placeholder for the addresses that will be searched
-  # for matching address to court. Edit if court venue is based on 
-  # a different address than the user's
-  [user.address.address for user in users.complete_elements()]
-  addresses_to_search = [user.address for user in users.complete_elements()]
+id: docket number
+question: |
+  What is the docket number for your case?
+fields:
+  - I don't know the docket number: dont_know_docket_number
+    datatype: yesno    
+  - Docket number: docket_number
+    hide if: dont_know_docket_number  
+validation code: |
+  # This should be safe to 
+  if dont_know_docket_number:
+    docket_number = '' 
 ---
 id: Tell Us About the Case
 section: case_details
