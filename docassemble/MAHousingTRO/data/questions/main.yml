@@ -88,7 +88,6 @@ data:
 comment: |
   Controls order and branching logic for questions specific to this form
 id: interview_order_verified_complaint_and_request_for
-mandatory: true
 code: |
   # Set the allowed courts for this interview
   allowed_courts = ['Housing Court']
@@ -119,6 +118,7 @@ code: |
   facts_description
   utilities_needed
   stop_fail_repairs
+  emergency_relief_timing_warning
   issue_tro
   if issue_tro:
       plaintiff_waiver_request
@@ -142,7 +142,7 @@ code: |
 ---
 comment: |
   This block includes the logic for standalone interviews.
-  Delete mandatory: True to include in another interview
+mandatory: true  
 code: |
   al_intro_screen
   in_danger
@@ -585,6 +585,19 @@ validation code: |
   if not showifdef('utilities_needed') and not showifdef('stop_eviction') and not showifdef('stop_fail_repairs') and not showifdef('stop_return_belongings') and not showifdef('other_court_request'):
       validation_error("You must ask the court to do at least one thing.")
 ---
+id: emergency relief timing warning
+continue button field: emergency_relief_timing_warning
+continue button label: I understand
+question: |
+  Before you ask the court for emergency help
+subquestion: |
+ You can only ask for a **Temporary Restraining Order** or a **Short Order
+  of Notice** at the same time you file your complaint. They are part of
+  starting your case. You cannot add them to a case later.
+
+  A **Preliminary Injunction** is different. You can ask for one when you
+  file your complaint, or later on while your case is still open.
+---
 id: Mass Civ Pro
 mandatory: false
 question: |
@@ -739,7 +752,7 @@ review:
       > ${ single_paragraph(facts_description) }
 ---
 code: |
-  signature_fields = ['plaintiffs[0].signature']
+  signature_fields = ['users[0].signature']
 ---
 id: edit plaintiffs
 continue button field: plaintiffs.revisit
