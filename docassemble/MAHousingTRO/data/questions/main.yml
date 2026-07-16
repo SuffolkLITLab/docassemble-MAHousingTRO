@@ -603,20 +603,6 @@ help: |
   **Short Order of Notice** <br>
   A Short Order of Notice is a procedural tool used to bypass standard court timelines when a matter is urgent. Typically, courts require you to give a landlord a specific amount of advance notice before a hearing, but if you are facing immediate homelessness, you cannot wait that long. By requesting a Short Order of Notice, you are asking the court to shrink that waiting period, allowing the judge to hear your emergency request for protection much sooner than the standard schedule would allow.
 ---
-id: Court Fee Waiver
-question: |
-  Court Fee Waiver
-mandatory: false
-fields:
-  -  Would you like the Court waive the security requirement: waiver_yes_no
-     datatype: yesnoradio
-  - "Provide explanation": plaintiff_waiver_request
-    input type: area 
-    show if: waiver_yes_no
-validation code: |
-  if waiver_yes_no is False:
-    plaintiff_waiver_request = ""
----
 id: Your Request
 question: |
   Your Request
