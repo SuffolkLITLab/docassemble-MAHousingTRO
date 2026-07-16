@@ -154,22 +154,26 @@ fields:
   - "Provide request": plaintiff_request
     input type: area
 ---
-id: Court Fee Waiver
+terms: 
+  bond: |
+    A cash deposit or a promise to pay. 
+---
+id: Security Waiver
 question: |
-  Why would you like the Court waive the {security} requirement?
+  Would you like the Court waive the security requirement?
+subquestion: |
+  If the judge says yes to your request, you usually have to pay some money to the court first. This is called a {bond}. The court holds onto this money in case it turns out later that you shouldn't have gotten the temporary restraining order. 
+  
+  There's no set amount. The judge decides how much, based on your case.
+
 fields:
-  - "Do you want to ask the judge waive the security?": waiver_yes_no
+  - "Would you like to ask the court to waive this bond?": waiver_yes_no
     datatype: yesnoradio
-    help: |
-      This is not a fee. You are not paying the court. The money is set aside in case the judge later decides the order was a mistake and your landlord lost money because of it. If it is found to be proper the court will return the deposit to you.
-  - "Explain to the court why you can't put down a security?": plaintiff_waiver_request
+  - "Why do you want this waiver?": plaintiff_waiver_request
     input type: area
     show if: waiver_yes_no
     help: |
-      If you cannot afford this, you can ask the judge to skip it. Many tenants do. You just have to tell the judge why.
-terms: 
-  security: |
-    When filing in Massachusetts the court orders your landlord to do something right away, the court can ask you to put down money first. This money is called "security".
+      For example: you may not have enough money right now, or paying this amount would cause you hardship. 
 ---
 code: |
   # This is a placeholder for the addresses that will be searched
