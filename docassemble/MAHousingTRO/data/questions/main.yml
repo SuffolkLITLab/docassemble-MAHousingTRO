@@ -7,26 +7,12 @@ include:
 ---
 metadata:
   title: >-
-    Verified complaint and request for emergency relief
+    Get Emergency Housing Relief
   short title: >-
-    Emergency Relief
+    Get Emergency Housing Relief
   description: |-
-    This interview helps someone in Massachusetts ask the court for a verified complaint and request for emergency relief.
-  can_I_use_this_form: |
-    If you are a _____________, you can use this interview to ____________.
-  before_you_start: |
-    This interview will help you ask the court for a verified complaint and request for emergency relief. You can also issue a Temporary Restraining Order, Short Order of Notice, and request for a Preliminary Injunction.
-    
-    Before you get started, please gather:
-    
-    1. 
-    1. 
-    1. 
-    
-    When you are finished, you will need to:
-    
-    1. 
-    1.
+    This interview helps someone in Massachusetts get emergency housing relief. 
+
   when_you_are_finished: |
   efiling_enabled: False
   integrated_efiling: False
@@ -71,7 +57,7 @@ code: |
   github_repo_name =  'docassemble-VerifiedComplaintAndRequestFor'
 ---
 code: |
-  interview_short_title = 'Ask the court for a verified complaint and request for emergency relief'
+  interview_short_title = 'File a complaint and request a temporary restraining housing order.'
 ---
 code: |
   al_form_type = "starts_case" 
