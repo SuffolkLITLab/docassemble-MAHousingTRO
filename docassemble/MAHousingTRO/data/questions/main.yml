@@ -100,6 +100,7 @@ data:
 comment: |
   Controls order and branching logic for questions specific to this form
 id: interview_order_verified_complaint_and_request_for
+mandatory: true
 code: |
   # Set the allowed courts for this interview
   allowed_courts = ['Housing Court']
@@ -109,6 +110,7 @@ code: |
   eviction_flow_complete
   screening_finished
   screening_2_finished
+  
   nav.set_section ("people_in_the_case")
   user_role = "plaintiff"
   user_ask_role = "plaintiff"
@@ -121,6 +123,7 @@ code: |
   defendants[0].email
   defendants[0].phone_number
   nav.set_section("case_details")
+  
   trial_court
   docket_number
   facts_description
@@ -130,6 +133,15 @@ code: |
   if issue_tro:
       plaintiff_waiver_request
       plaintiff_request
+
+  indigency_q
+  if indigency_q:
+      set_fee_waiver_defaults
+      if not is_indigent:
+          doesnt_qualify_interstitial
+      case_name
+      affidavit_of_indigency_filing_court
+  
   nav.set_section("review_answers")
   verified_complaint_and_request_for_preview_question
   nav.set_section("signature_and_submit")
@@ -625,6 +637,34 @@ fields:
  - "**Based on these problems, please describe exactly what you want the court to order your landlord to do or stop doing.**": plaintiff_request
    datatype: area
 ---
+code: |
+  court_costs_amount = 135
+---
+code: |
+  fees['Entry fee'].waive = True
+  fees['Entry fee'].amount = court_costs_amount
+  set_fee_waiver_defaults = True
+---
+code: |
+  fees['Filing fee'].waive = True
+  fees['Filing fee'].amount = court_costs_amount
+  fees['Service'].waive = True
+  fees['Service'].amount = 40
+  set_fee_waiver_defaults = True
+---
+code: |
+  affidavitofindigency_attachment.enabled = indigency_q and is_indigent
+---
+id: Fee Waiver
+question: |
+  Would you like to file an affidavit of indigency
+fields:
+  - no label: indigency_q
+    datatype: yesnoradio
+auto terms:
+  Affidavit of Indigency: |
+   A fee waiver for all the fees and costs required to start a case and continue it such filing fees, court fees, and service costs.
+---
 id: preview verified_complaint_and_request_for
 section: review_answers
 question: |
@@ -640,6 +680,11 @@ subquestion: |
   **Temporary Restraining Order:**<br>
   ${ temporary_restraining_order_attachment.as_pdf(key='preview') }<br>
   ${ action_button_html(url_action('review_temporary_restraining_order'), label='Edit answers', color='info') }
+  % endif
+
+  % if indigency_q and is_indigent:
+  **Affidavit of Indigency:**<br>
+  ${ affidavitofindigency_attachment.as_pdf(key='preview') }<br>
   % endif
  
   Click the images to open them in a new tab. Click the "Edit answers" button
