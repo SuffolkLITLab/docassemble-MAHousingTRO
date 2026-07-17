@@ -76,11 +76,13 @@ code: |
 reconsider: True
 variable name: al_nav_sections
 data:
-  - getting_started: Start
-  - introduction_screen: Introduction
+  - getting_started: Get started
+  - immediate_danger: Are you in immediate danger?
   - eligibility_screening: Eligibility
-  - people_in_the_case: People in the case
-  - case_details: Case details
+  - case_informaiton: Case information
+  - court_selection: Court selection
+  - your_information: Your information
+  - landlord_information: Landlord information 
   - review_answers: Review answers
   - signature_and_submit: Sign and submit
   - download_next_steps: Download & next step
@@ -92,29 +94,29 @@ code: |
   # Set the allowed courts for this interview
   allowed_courts = ['Housing Court']
   nav.set_section("getting_started")
-  in_danger
-  nav.set_section("introduction_screen")
   temporary_restraining_order_intro
+  nav.set_section("immediate_danger")
+  in_danger
   nav.set_section("eligibility_screening")
   eviction_flow_complete
   screening_finished
   screening_2_finished
-  
-  nav.set_section ("people_in_the_case")
+  nav.set_section ("your_information")
   user_role = "plaintiff"
   user_ask_role = "plaintiff"
   plaintiffs.gather()
   plaintiffs[0].phone_number
   plaintiffs[0].address.address
   plaintiffs[0].email
+  nav.set_section("landlord_information")
   defendants.gather()
   defendants[0].address.address
   defendants[0].email
   defendants[0].phone_number
-  nav.set_section("case_details")
-  
+  nav.set_section("court_information")
   trial_court
   docket_number
+  nav.section("case_information")
   facts_description
   utilities_needed
   stop_fail_repairs
@@ -124,7 +126,6 @@ code: |
   if issue_tro:
       plaintiff_waiver_request
       plaintiff_request
-
   indigency_q
   if indigency_q:
       set_fee_waiver_defaults
@@ -132,7 +133,6 @@ code: |
           doesnt_qualify_interstitial
       case_name
       affidavit_of_indigency_filing_court
-  
   nav.set_section("review_answers")
   verified_complaint_and_request_for_preview_question
   nav.set_section("signature_and_submit")
@@ -146,7 +146,6 @@ comment: |
 mandatory: true  
 code: |
   al_intro_screen
-  in_danger
   verified_complaint_and_request_for_intro
   interview_order_verified_complaint_and_request_for
   signature_date
@@ -163,7 +162,6 @@ code: |
 ---
 code: |
   al_intro_screen
-  in_danger
   temporary_restraining_order_intro
   interview_order_temporary_restraining_order
   signature_date
@@ -195,7 +193,7 @@ id: immediate danger resources
 question: | 
   Are You In Danger Right Now?
 subquestion: |
-  ####Watch for these warning signs:
+  #####Have you seen any of these warning signs?
   * Sparks or the smell of smoke (fire risk)
   * The smell of gas (gas leak)
   * Large cracks in your ceiling or floors
@@ -204,7 +202,9 @@ fields:
   - no label: in_danger
     datatype: yesnoradio
   - note: |
-      **In case of an emergency, please contact 911.**
+      **In case of an emergency, please contact 911.** 
+
+      If you are in immediate danger and need to find emergency housing, click this button to find emergency housing resources. 
 
       <div class="d-flex gap-2">
         <a href="https://www.mass.gov/orgs/emergency-housing-help-programs" class="btn btn-warning">Find Emergency Housing<a/a>
