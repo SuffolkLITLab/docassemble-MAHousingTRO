@@ -118,6 +118,7 @@ code: |
   facts_description
   utilities_needed
   stop_fail_repairs
+  uptocode_referral_complete
   emergency_relief_timing_warning
   issue_tro
   if issue_tro:
@@ -197,7 +198,7 @@ subquestion: |
   ####Watch for these warning signs:
   * Sparks or the smell of smoke (fire risk)
   * The smell of gas (gas leak)
-  * Large cracks in your cieling or floors
+  * Large cracks in your ceiling or floors
   
 fields: 
   - no label: in_danger
@@ -406,7 +407,7 @@ id: eviction warning screen
 question: |
   Warning: Ongoing eviction case
 subquestion: |
-  If there is an active eviction case against you, and your landlord has a court order for eviction, use ${ btn_made } or ${ btn_uptocode } for the best chance to stop them. 
+  If there is an active eviction case against you, and your landlord has a court order for eviction, use ${ btn_made } for the best chance to stop them. 
 
    If all else fails or there is active eviction order against you seek professional legal advice: 
   
@@ -584,6 +585,64 @@ fields:
 validation code: |
   if not showifdef('utilities_needed') and not showifdef('stop_eviction') and not showifdef('stop_fail_repairs') and not showifdef('stop_return_belongings') and not showifdef('other_court_request'):
       validation_error("You must ask the court to do at least one thing.")
+---
+id: uptocode referral logic
+code: |
+  if violation_bad_conditions or stop_fail_repairs:
+      uptocode_warning_seen
+  uptocode_referral_complete = True
+---
+id: uptocode referral warning
+continue button field: uptocode_warning_seen
+continue button label: Continue
+question: |
+  Warning: UpToCode may be a better fit for repairs
+subquestion: |
+  You told us your landlord has not fixed bad conditions in your home.
+
+  There is a free website that can help you with repairs, and it is called
+  **UpToCode**. It is built for tenants in Massachusetts, and it is free.
+
+  #### What UpToCode can do for you
+
+  * Make a list of the problems: you go through your home room by room
+  and write down everything that is wrong. You can also add photos and the
+  date that each problem started.
+  
+  * Show you the law: a law called the State Sanitary Code says what
+  your landlord has to fix. UpToCode explains that law in plain words, so
+  you do not have to read the legal text yourself.
+  
+  * Write to your landlord: you answer some questions, and UpToCode
+  writes the whole letter for you.
+  
+  * Ask the city for an inspection: a city inspector can visit your
+  home and order your landlord to fix the problems.
+  
+  * Go to court: UpToCode can help you ask a judge to order repairs.
+  It can also help you ask your landlord to pay you money.
+
+  You decide which of these you want to do, and you do not have to do all
+  of them. Most tenants finish in 20 minutes to 1 hour, and UpToCode is
+  available in English and Spanish.
+
+  ${ btn_uptocode }
+
+  #### Which one should you use?
+
+  Use this form if you have an emergency and you need a judge to act in
+  the next few days. For example, your landlord locked you out, or shut off
+  your heat, water, or electricity.
+
+  Use **UpToCode** if the main thing you want is repairs. It is also the
+  better choice if you have not told your landlord about the problem in
+  writing yet. A judge will want evidence that your landlord knew about the
+  problem and decided not to fix it. UpToCode helps you build that evidence.
+
+  You can use both, and starting UpToCode today does not stop you from
+  coming back to this form later.
+
+  You may continue with this form if you wish.
 ---
 id: emergency relief timing warning
 continue button field: emergency_relief_timing_warning
