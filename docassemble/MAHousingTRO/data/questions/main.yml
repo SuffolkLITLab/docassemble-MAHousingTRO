@@ -359,7 +359,7 @@ subquestion: |
   % endif
   
   % if defined('is_public_housing_exclusion') and is_public_housing_exclusion:
-  * **Public/Subsidized Housing Exclusion:** If you live in a public or subsidized development, that falls under a different form, not the forms this interview produces. You will need a **different process**. ${ btn_public_housing }
+  * **Public or Subsidized Housing Exclusion:** If you live in a public or subsidized development, that falls under a different form, not the forms this interview produces. You will need a **different process**. ${ btn_public_housing }
   % endif
 
   However, you are still allowed to proceed with this interview and generate your forms if you would like to continue.
