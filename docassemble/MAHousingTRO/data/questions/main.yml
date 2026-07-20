@@ -126,6 +126,7 @@ code: |
   
   emergency_relief_timing_warning
   issue_a_tro
+  issue_a_son
   issue_tro
   if issue_tro:
       waiver_yes_no
@@ -698,6 +699,41 @@ fields:
   - 'Do you want a Temporary Restraining Order?': issue_a_tro
     datatype: yesnoradio
 ---
+id: issue a short order of notice
+question: |
+  It sounds like you may need a Short Order of Notice
+subquestion: |
+  Based on what you have told us, it sounds like you may benefit from a Short Order of Notice. 
+  
+  #####What is a Short Order of Notice?
+  A Short Order of Notice is a procedural tool used to bypass standard court timelines when a matter is urgent. Typically, courts require you to give a landlord a specific amount of advance notice before a hearing.
+
+  Why is this important?
+  If you are facing an emergency, you cannot wait the standard amount of time. This asks the court to shrink that waiting period, allowing the judge to hear your emergency request much sooner.
+
+  How would a Short Order of Notice benefit you?
+  It allows you to get in front of a judge faster to ask them to:
+
+  % if violation_breach_contract:
+  * Stop your landlord from breaching your contract
+  % endif
+  % if utilities_needed:
+  * Stop your landlord from shutting off your utilities
+  % endif
+  % if violation_bad_conditions:
+  * Order your landlord to make emergency repairs right away
+  % endif
+  % if stop_eviction:
+  * Stop your landlord from trying to evict you from your home
+  % endif
+  % if stop_return_belongings:
+  * Order your landlord to return your belongings
+  % endif
+  
+fields:
+  - 'Do you want to request a Short Order of Notice?': issue_a_son
+    datatype: yesnoradio
+---
 id: Mass Civ Pro
 mandatory: false
 question: |
@@ -716,6 +752,7 @@ fields:
     
   - 'Issue a Short Order of Notice (a shortened notice period to the other side so the Court can hear this request)': issue_son
     datatype: yesno
+    default: ${ issue_a_son }
 
 help: |
   **Temporary Restraining Order (TRO)** <br>
