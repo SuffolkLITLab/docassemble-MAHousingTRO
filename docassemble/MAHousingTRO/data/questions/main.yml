@@ -116,11 +116,12 @@ code: |
   nav.set_section("court_information")
   trial_court
   docket_number
-  nav.section("case_information")
+  nav.set_section("case_information")
   facts_description
   utilities_needed
   stop_fail_repairs
   uptocode_referral_complete
+  issue_a_tro
   emergency_relief_timing_warning
   issue_tro
   if issue_tro:
@@ -657,13 +658,54 @@ subquestion: |
   A **Preliminary Injunction** is different. You can ask for one when you
   file your complaint, or later on while your case is still open.
 ---
+id: issue a tro
+question: |
+  It sounds like you may need a Temporary Restraining Order
+subquestion: |
+  Based on what you have told us, it sounds like you may benefit from a Temporary Restraining Order. 
+  
+  #####What is a Temporary Restraining Order (TRO)?
+  A TRO is an emergency court order. It tells your landlord to stop doing something illegal or to fix a dangerous problem in your home right away. 
+
+  **How long does a TRO last?**
+  A TRO works fast, but it is only good for about 10 days. 
+  
+  After that, you and your landlord will go to a full court hearing where a judge will decide what happens next. 
+
+  **How would a TRO benefit you?**
+
+  % if violation_breach_contract:
+  * Stop your landlord from breaching your contract
+  % endif
+  % if utilities_needed:
+  * Stop your landlord from shutting off your utilities
+  % endif
+  % if violation_bad_conditions:
+  * Order your landlord to make emergency repairs right away
+  % endif
+  % if stop_eviction:
+  * Stop your landlord from trying to evict you from your home
+  % endif
+  % if stop_return_belongings:
+  * Order your landlord to return your belongings
+  % endif
+  
+fields:
+  - 'Do you want a Temporary Restraining Order?': issue_a_tro
+    datatype: yesnoradio
+---
 id: Mass Civ Pro
 mandatory: false
 question: |
   Which of the following options (if any) would you like to ask the court to do?
+subquestion: |
+  We have already checked the boxes that make sense based on your earlier
+  answers, but you should review and make any changes as needed.
+  
 fields:
   - 'Issue a Temporary Restraining Order (valid for 10 days only; may be requested without immediate notice to the other side)': issue_tro
     datatype: yesno
+    default: ${ issue_a_tro }
     
   - 'Request a Preliminary Injunction (may be issued for longer than 10 days; notice to the other side is required)': request_pi
     datatype: yesno
