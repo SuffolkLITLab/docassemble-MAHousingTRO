@@ -42,6 +42,7 @@ metadata:
     - "CO-00-00-00-00"
   authors:
     - Shivani Dahya
+    - Pedro Barbosa
   original_form: []
   original_form_published_on: ""
   allowed_courts: 
@@ -90,16 +91,20 @@ code: |
   allowed_courts = ['Housing Court']
   user_role = "plaintiff"
   user_ask_role = "plaintiff"
+  roles_assigned
   plaintiffs.gather()
+  plaintiffs[0].phone_number
+  plaintiffs[0].address.address
+  plaintiffs[0].email
   defendants.gather()
   set_progress(20)
   docket_number
+  trial_court.address.city
   plaintiff_request
   waiver_yes_no
   if waiver_yes_no:
       plaintiff_waiver_request
   set_progress(40)
-  trial_court.address.city
   set_progress(60)
   signature_date
   basic_questions_signature_flow
@@ -124,35 +129,132 @@ code: |
   )
   temporary_restraining_order_download
 ---
-id: Temporary_Restraining_Order
+id: temporary restraining order intro
 continue button field: temporary_restraining_order_intro
 question: |
-  Temporary Restraining Order
+  What does this interview do?
 subquestion: |
-  This interview will help you ask the court for a Temporary Restraining Order.
+  This interview helps you ask a Housing Court judge for a temporary restraining order.
+ 
+  A judge can sign this order the same day you file. The judge can do this
+  before the other party knows you went to court.
+ 
+  The order lasts about **10 days**. After that, both sides go to a hearing.
+  The judge then decides what happens next.
   
-  Before you get started, please gather:
-  
-  1. 
-  1. 
-  1. 
-  
-  When you are finished, you will need to:
-  
-  1. 
-  1.
-
-  If you are a _____________, you can use this interview to ____________.
-
-  Most people take about 10 minutes to complete this interview.
+  #### Should you use this form?
+  1. Do you need a court order right away?
+  2. Will you suffer {serious harm} if you have to wait for the other party to respond?
+ 
+  #### What to gather before you start
+ 
+  * Your lease or rental agreement, if you have one
+  * The other party's name, address, phone number, and email
+  * Photos, videos, text messages, or letters that show the problem
+  * The date and time the problem started
+  * Your docket number, if the court already gave you one
+ 
+  If you do not have all of this, you can still start the interview. Most
+  people take about 10 minutes to finish.
+ 
+  #### After you finish this interview
+ 
+  1. Print and sign your forms.
+  2. Bring them to the Housing Court clerk's office for the county where the home is.
+  3. Ask the clerk to bring your papers to a judge today.
+  4. Be ready to tell the judge why you cannot wait.
 ---
-id: Your Request
+id: your contact information
+section: your_information
 question: |
-  Your Request
-subquestion: What actions do you want the Court to stop the defendant from doing?
-fields: 
-  - "Provide request": plaintiff_request
+  % if al_person_answering == "user":
+  What is your contact information?
+  % else:
+  What is ${ users[0] }'s contact information?
+  % endif
+subquestion: |
+  % if al_person_answering == "user":
+  Include at least **one** way to reach you other than by mail.
+  % else:
+  Include at least **one** way to reach ${ users[0] } other than by mail.
+  % endif
+
+  ${ collapse_template(why_contact_info_needed_template) }
+fields:  
+  - Phone number: users[0].phone_number
+    required: False
+    datatype: al_international_phone
+  - Email address: users[0].email    
+    datatype: email
+    required: False
+  - label: |
+      % if al_person_answering == "user":
+      Other ways to reach you
+      % else:
+      Other ways to reach ${ users[0] }
+      % endif
+    field: users[0].other_contact_method
     input type: area
+    required: False
+    help: |
+      If you do not have a phone number or email, provide
+      specific contact instructions. For example, use a friend's phone number.
+      But the friend must be someone you can rely on to give you a
+      message.
+validation code: |
+  if (
+    not showifdef("users[0].phone_number")
+    and (not showifdef("users[0].mobile_number"))
+    and (not showifdef("users[0].email"))
+    and (not showifdef("users[0].other_contact_method"))
+  ):
+    validation_error(
+      word("You need to provide at least one contact method."),
+      field="users[0].other_contact_method",
+    )
+---
+question: |
+  Are you a landlord or a tenant?
+fields:
+  - no label: party_type
+    datatype: radio
+    choices:
+      - Landlord: landlord
+      - Tenant: tenant
+---
+code: |
+  if party_type == 'landlord':
+      plaintiff_label = 'landlord'
+      defendant_label = 'tenant'
+  else:
+      plaintiff_label = 'tenant'
+      defendant_label = 'landlord'
+  roles_assigned = True
+---
+id: plaintiff request
+question: |
+  What are you asking the court to do?
+subquestion: |
+  Explain exactly what you want the judge to order the **${ defendant_label }** to do or stop doing.
+fields:
+  - Your Request: plaintiff_request
+    input type: area
+---
+sets:
+  - other_parties[i].name.first
+  - other_parties[i].name.last
+  - other_parties[i].name.middle
+  - other_parties[i].name.suffix
+id: names of opposing parties
+question: |
+  % if user_started_case:
+  Name of the **${ defendant_label }** in this matter
+  % else:
+  Name of the **${ plaintiff_label }** in this matter
+  % endif
+fields:
+  - code: |
+      other_parties[i].name_fields(person_or_business="unsure")
 ---
 terms: 
   bond: |
@@ -160,7 +262,7 @@ terms:
 ---
 id: Security Waiver
 question: |
-  Would you like the Court waive the security requirement?
+  Would you like to ask the Court waive the security requirement?
 subquestion: |
   If the judge says yes to your request, you usually have to pay some money to the court first. This is called a {bond}. The court holds onto this money in case it turns out later that you shouldn't have gotten the temporary restraining order. 
   
