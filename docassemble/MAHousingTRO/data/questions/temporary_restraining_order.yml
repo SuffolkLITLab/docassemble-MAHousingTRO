@@ -2,6 +2,7 @@ include:
   - docassemble.AssemblyLine:assembly_line.yml
   - docassemble.ALMassachusetts:al_massachusetts.yml
   - docassemble.MassAccess:massaccess.yml
+  - docassemble.ALAffidavitOfIndigency:affidavit_body.yml
 ---
 metadata:
   title: >-
@@ -80,8 +81,27 @@ objects:
   - other_parties: ALPeopleList.using(ask_number=True,target_number=1)
   - users: ALPeopleList.using(ask_number=True,target_number=1)
 ---
-sections:
+features:
+  navigation: True
+---
+code: |
+  enable_al_nav_sections = True
+  al_parties_nav_section = "people_in_the_case"
+---
+reconsider: True
+variable name: al_nav_sections
+data:
+  - getting_started: Get started
+  - emergency_relief: Request emergency relief  
+  - your_information: Your information
+  - other_party_information: Other party information
+  - case_information: Case information
+  - court_selection: Court selection
+  - affidavit_of_indigency: Affidavit of indigency
+    hidden: ${ showifdef("indigency_q") != True }
   - review_temporary_restraining_order: Review your answers
+  - signature_and_submit: Sign and submit
+  - download_next_steps: Download & next step 
 ---
 comment: |
   Controls order and branching logic for questions specific to this form
@@ -89,25 +109,46 @@ id: interview_order_temporary_restraining_order
 code: |
   # Set the allowed courts for this interview
   allowed_courts = ['Housing Court']
+  nav.set_section("getting_started")
+  temporary_restraining_order_intro
+  what_is_a_tro
+  roles_assigned
+  
+  nav.set_section("emergency_relief")
+  plaintiff_request
+  
+  nav.set_section("your_information")
   user_role = "plaintiff"
   user_ask_role = "plaintiff"
-  roles_assigned
+  set_progress(20)
   plaintiffs.gather()
   plaintiffs[0].phone_number
   plaintiffs[0].address.address
   plaintiffs[0].email
+  
+  nav.set_section("other_party_information")
   defendants.gather()
-  set_progress(20)
-  docket_number
-  trial_court.address.city
-  plaintiff_request
+  set_progress(40)
+
+  nav.set_section("case_information")
+  docket_numbers
   waiver_yes_no
   if waiver_yes_no:
       plaintiff_waiver_request
-  set_progress(40)
   set_progress(60)
-  signature_date
+
+  nav.set_section("court_selection")
+  trial_court.address.city
+  set_progress(80)
+
+  nav.set_section("review_temporary_restraining_order")
+  temporary_restraining_order_preview_question
+
+  nav.set_section("signature_and_submit")
+  users[0].states_above_true
   basic_questions_signature_flow
+
+  nav.set_section("download_next_steps")
   interview_order_temporary_restraining_order = True
 ---
 comment: |
@@ -129,26 +170,36 @@ code: |
   )
   temporary_restraining_order_download
 ---
+code: |
+  btn_legal_services = '<a href="https://www.mass.gov/info-details/finding-a-lawyer" target="_blank" class="btn btn-info">Find a Lawyer</a>'
+  btn_emergency_housing = '<a href="https://www.mass.gov/orgs/emergency-housing-help-programs" class="btn btn-warning" target="_blank">Find Emergency Housing</a>'
+---
+terms:
+  housing emergency: |
+    You cannot enter the apartment, your utilities were shut off, the apartment has become unsafe or unsanitary to live in.
+  immediate danger: |
+    If you see smoke, smell gas, or notice large cracks in the cieling or floors. 
+---
 id: temporary restraining order intro
 continue button field: temporary_restraining_order_intro
 question: |
   What does this interview do?
 subquestion: |
-  This interview helps you ask a Housing Court judge for a temporary restraining order.
- 
-  A judge can sign this order the same day you file. The judge can do this
-  before the other party knows you went to court.
- 
-  The order lasts about **10 days**. After that, both sides go to a hearing.
-  The judge then decides what happens next.
+  This interview will help you file a Temporary Restraining Order with the Housing Court.
+
+  If you are in {immediate danger}, click this button to find emergency housing resources. 
+
+  ${ btn_emergency_housing }
   
-  #### Should you use this form?
-  1. Do you need a court order right away?
-  2. Will you suffer {serious harm} if you have to wait for the other party to respond?
+  ## Can you use this form?
+  1. Are you facing a {housing emergency}?
+  2. Will you suffer serious harm if you have to wait any longer for your problem to be fixed?
+
+  If you answered yes to the above questions, you may continue. 
  
-  #### What to gather before you start
+  ### What to gather before you start
  
-  * Your lease or rental agreement, if you have one
+  * The lease or rental agreement, if you have one
   * The other party's name, address, phone number, and email
   * Photos, videos, text messages, or letters that show the problem
   * The date and time the problem started
@@ -163,6 +214,36 @@ subquestion: |
   2. Bring them to the Housing Court clerk's office for the county where the home is.
   3. Ask the clerk to bring your papers to a judge today.
   4. Be ready to tell the judge why you cannot wait.
+  
+  ${ collapse_template(not_right_form_template) }
+---
+template: not_right_form_template
+subject: |
+  Not the right form for you?
+content: |
+  If you need help but this is not an emergency situation, click the button to find a lawyer who may better assist you. 
+
+  ${ btn_legal_services } 
+---
+id: What is a TRO?
+continue button field: what_is_a_tro
+question: |
+  What is a Temporary Restraining Order?
+subquestion: |
+  A Temporary Restraining Order (TRO) is an emergency court order telling the other party to stop doing something illegal or to fix a dangerous problem in the home right away. 
+
+  **How long does it last?** A temporary restraining order will last only **10 days**. 
+  
+  **What happens after the 10 days?**
+  After that, both parties will need to go to a court hearing where you can request a preliminary injunction if you need a longer restraining order. 
+
+  ${ collapse_template(extend_a_tro_template) }
+---
+template: extend_a_tro_template
+subject: |
+  Can you extend a TRO?
+content: |
+  A judge can extend it for another 10 days if there is a good reason or if your landlord agrees to extend it. You may also request a preliminary injunction which lasts longer than the 10 days. 
 ---
 id: your contact information
 section: your_information
@@ -276,6 +357,21 @@ fields:
     show if: waiver_yes_no
     help: |
       For example: you may not have enough money right now, or paying this amount would cause you hardship. 
+---
+id: affirmation and oath of no perjury
+question: |
+  Signing under oath 
+subquestion: |
+  Your application must be signed under oath. That means everything you say must be true as far as you know.
+fields:
+  - no label: users[i].states_above_true
+    datatype: checkboxes
+    minlength: 1
+    choices:
+      - I affirm that the answers I have given are true, under the penalties of perjury: states_true
+    validation messages:
+      minlength: |
+        You cannot keep going unless you did your best to tell the truth.
 ---
 code: |
   # This is a placeholder for the addresses that will be searched
