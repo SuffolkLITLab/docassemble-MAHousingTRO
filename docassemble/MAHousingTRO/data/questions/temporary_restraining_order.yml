@@ -8,24 +8,27 @@ metadata:
   title: >-
     Temporary Restraining Order
   short title: >-
-    Temporary restraining ord
+    Temporary Restraining Order
   description: |-
     This interview helps someone in Massachusetts ask the court for a Temporary Restraining Order.
   can_I_use_this_form: |
-    If you are a _____________, you can use this interview to ____________.
+    Use this interview if you are a tenant or a landlord in Massachusetts and
+    you need the Housing Court to order the other side to stop something right
+    away.
   before_you_start: |
     This interview will help you ask the court for a Temporary Restraining Order.
-    
+
     Before you get started, please gather:
-    
-    1. 
-    1. 
-    1. 
-    
+
+    1. Your lease or rental agreement, if you have one
+    1. The other party's name, address, phone number, and email
+    1. Photos, videos, texts, or letters that show the problem
+    1. Your docket number, if the court already gave you one
+
     When you are finished, you will need to:
-    
-    1. 
-    1.
+
+    1. Print and sign your forms
+    1. Bring them to the Housing Court clerk's office in your county
   when_you_are_finished: |
   efiling_enabled: False
   integrated_efiling: False
@@ -57,7 +60,8 @@ metadata:
   review_date: 2026-06-24
   form_titles:
     - Temporary Restraining Order
-  form_numbers: []
+  form_numbers:
+    - HC0004
   update_notes: |
 ---
 code: |
@@ -128,6 +132,7 @@ code: |
   
   nav.set_section("other_party_information")
   defendants.gather()
+  defendants[0].address.address
   set_progress(40)
 
   nav.set_section("case_information")
@@ -138,7 +143,7 @@ code: |
   set_progress(60)
 
   nav.set_section("court_selection")
-  trial_court.address.city
+  trial_court
   set_progress(80)
 
   nav.set_section("review_temporary_restraining_order")
@@ -170,34 +175,44 @@ code: |
   )
   temporary_restraining_order_download
 ---
+comment: |
+  The HC0004 template renders a single docket number, but AssemblyLine collects
+  a list. Bridge the two so the template always resolves.
+code: |
+  docket_number = str(docket_numbers[0]) if len(docket_numbers) else ""
+---
 code: |
   btn_legal_services = '<a href="https://www.mass.gov/info-details/finding-a-lawyer" target="_blank" class="btn btn-info">Find a Lawyer</a>'
   btn_emergency_housing = '<a href="https://www.mass.gov/orgs/emergency-housing-help-programs" class="btn btn-warning" target="_blank">Find Emergency Housing</a>'
 ---
 terms:
   housing emergency: |
-    You cannot enter the apartment, your utilities were shut off, the apartment has become unsafe or unsanitary to live in.
+    You are locked out of your home. Or your utilities are shut off. Or your
+    home is not safe or clean enough to live in.
   immediate danger: |
-    If you see smoke, smell gas, or notice large cracks in the cieling or floors. 
+    You see smoke, smell gas, or notice large cracks in the ceiling or floors.
 ---
 id: temporary restraining order intro
 continue button field: temporary_restraining_order_intro
 question: |
   What does this interview do?
 subquestion: |
-  This interview will help you file a Temporary Restraining Order with the Housing Court.
+  This interview helps you ask the Housing Court for a temporary restraining
+  order.
 
-  If you are in {immediate danger}, click this button to find emergency housing resources. 
+  If you are in {immediate danger}, use this button to find emergency housing
+  help.
 
   ${ btn_emergency_housing }
   
-  ## Can you use this form?
-  1. Are you facing a {housing emergency}?
-  2. Will you suffer serious harm if you have to wait any longer for your problem to be fixed?
+  #### Can you use this form?
 
-  If you answered yes to the above questions, you may continue. 
+  1. Are you facing a {housing emergency}?
+  2. Will you be seriously harmed if you have to wait any longer to fix it?
+
+  If you answered yes to both questions, you can go on.
  
-  ### What to gather before you start
+  #### What to gather before you start
  
   * The lease or rental agreement, if you have one
   * The other party's name, address, phone number, and email
@@ -205,8 +220,8 @@ subquestion: |
   * The date and time the problem started
   * Your docket number, if the court already gave you one
  
-  If you do not have all of this, you can still start the interview. Most
-  people take about 10 minutes to finish.
+  You can still start without all of this. Most people finish in about 10
+  minutes.
  
   #### After you finish this interview
  
@@ -221,7 +236,7 @@ template: not_right_form_template
 subject: |
   Not the right form for you?
 content: |
-  If you need help but this is not an emergency situation, click the button to find a lawyer who may better assist you. 
+  Is this not an emergency? A lawyer may be able to help you instead.
 
   ${ btn_legal_services } 
 ---
@@ -230,12 +245,18 @@ continue button field: what_is_a_tro
 question: |
   What is a Temporary Restraining Order?
 subquestion: |
-  A Temporary Restraining Order (TRO) is an emergency court order telling the other party to stop doing something illegal or to fix a dangerous problem in the home right away. 
+  A temporary restraining order (TRO) is an emergency court order. It tells
+  the other party to stop breaking the law or to fix a danger in the home
+  right away.
 
-  **How long does it last?** A temporary restraining order will last only **10 days**. 
-  
-  **What happens after the 10 days?**
-  After that, both parties will need to go to a court hearing where you can request a preliminary injunction if you need a longer restraining order. 
+  **How long does it last?**
+
+  Only 10 days.
+
+  **What happens next?**
+
+  Both sides go to a court hearing. There you can ask for a preliminary
+  injunction if you need more time.
 
   ${ collapse_template(extend_a_tro_template) }
 ---
@@ -243,7 +264,9 @@ template: extend_a_tro_template
 subject: |
   Can you extend a TRO?
 content: |
-  A judge can extend it for another 10 days if there is a good reason or if your landlord agrees to extend it. You may also request a preliminary injunction which lasts longer than the 10 days. 
+  A judge can add 10 more days if there is a good reason. The other party can
+  also agree to give you more time. You can also ask for a preliminary
+  injunction, which lasts longer than 10 days.
 ---
 id: your contact information
 section: your_information
@@ -278,10 +301,9 @@ fields:
     input type: area
     required: False
     help: |
-      If you do not have a phone number or email, provide
-      specific contact instructions. For example, use a friend's phone number.
-      But the friend must be someone you can rely on to give you a
-      message.
+      If you do not have a phone number or email, tell us how to reach you.
+      For example, you can use a friend's phone number. But it must be a
+      friend you trust to give you the message.
 validation code: |
   if (
     not showifdef("users[0].phone_number")
@@ -294,6 +316,7 @@ validation code: |
       field="users[0].other_contact_method",
     )
 ---
+id: party type
 question: |
   Are you a landlord or a tenant?
 fields:
@@ -316,9 +339,10 @@ id: plaintiff request
 question: |
   What are you asking the court to do?
 subquestion: |
-  Explain exactly what you want the judge to order the **${ defendant_label }** to do or stop doing.
+  Explain exactly what you want the judge to order the **${ defendant_label }**
+  to do or stop doing.
 fields:
-  - Your Request: plaintiff_request
+  - Your request: plaintiff_request
     input type: area
 ---
 sets:
@@ -343,26 +367,30 @@ terms:
 ---
 id: Security Waiver
 question: |
-  Would you like to ask the Court waive the security requirement?
+  Do you want to ask the court to waive the security requirement?
 subquestion: |
-  If the judge says yes to your request, you usually have to pay some money to the court first. This is called a {bond}. The court holds onto this money in case it turns out later that you shouldn't have gotten the temporary restraining order. 
+  If the judge says yes to your request, you usually have to pay some money to
+  the court first. This is called a {bond}. The court holds the money in case
+  it turns out later that you should not have gotten the order.
   
-  There's no set amount. The judge decides how much, based on your case.
+  There is no set amount. The judge decides how much, based on your case.
 
 fields:
-  - "Would you like to ask the court to waive this bond?": waiver_yes_no
+  - "Do you want to ask the court to waive this bond?": waiver_yes_no
     datatype: yesnoradio
   - "Why do you want this waiver?": plaintiff_waiver_request
     input type: area
     show if: waiver_yes_no
     help: |
-      For example: you may not have enough money right now, or paying this amount would cause you hardship. 
+      For example: you may not have enough money right now, or paying this
+      amount would be a hardship for you.
 ---
 id: affirmation and oath of no perjury
 question: |
   Signing under oath 
 subquestion: |
-  Your application must be signed under oath. That means everything you say must be true as far as you know.
+  You must sign this form under oath. That means everything you say must be
+  true, as far as you know.
 fields:
   - no label: users[i].states_above_true
     datatype: checkboxes
@@ -395,12 +423,19 @@ review:
       % for item in plaintiffs:
         * ${ item }
       % endfor
+  - Edit: defendants.revisit
+    button: |
+      **Defendants**
+
+      % for item in defendants:
+        * ${ item }
+      % endfor
   - Edit: trial_court
     button: |
       **Trial court**
   
       % if defined("trial_court.phone"):
-      * phone_number: ${ trial_court.phone }
+      * phone number: ${ trial_court.phone }
       % endif
       % if defined("trial_court.address.address"):
       * address: ${ trial_court.address.block() }
@@ -408,10 +443,14 @@ review:
       % if defined("trial_court.division"):
       * division: ${ trial_court.division }
       % endif
-  - Edit: docket_number
+  - Edit: docket_numbers
     button: |
-      **docket number **:
+      **Docket number**:
       ${ docket_number }
+  - Edit: plaintiff_request
+    button: |
+      **Request from plaintiff**:
+      > ${ single_paragraph(plaintiff_request) }
   - Edit: waiver_yes_no
     button: |
       **Reason for waiver request**:
@@ -420,17 +459,10 @@ review:
       % else:
       > No waiver requested.
       % endif
-  - Edit: plaintiff_request
+  - Edit: signature_date
     button: |
-      **Request from plaintiff**:
-      > ${ single_paragraph(plaintiff_request) }
-  - Edit: defendants.revisit
-    button: |
-      **Defendants**
-
-      % for item in defendants:
-        * ${ item }
-      % endfor
+      **Date of signature**:
+      ${ signature_date }
 ---
 id: edit plaintiffs
 continue button field: plaintiffs.revisit
@@ -444,19 +476,22 @@ subquestion: |
 table: plaintiffs.table
 rows: plaintiffs
 columns:
-  - Signature: |
-      row_item.signature if defined("row_item.signature") else ""
   - Name: |
       row_item.name_full() if defined("row_item.name.first") else ""
   - Address: |
       row_item.address.block() if defined("row_item.address.address") else ""
   - Phone number: |
       row_item.phone_number if defined("row_item.phone_number") else ""
+  - Email: |
+      row_item.email if defined("row_item.email") else ""
+  - Signature: |
+      row_item.signature if defined("row_item.signature") else ""
 edit:
-  - plaintifs[0].signature
-  - plaintifs[0].name.first
-  - plaintifs[0].address.address
-  - plaintifs[0].phone_number
+  - name.first
+  - address.address
+  - phone_number
+  - email
+  - signature
 confirm: True
 ---
 id: edit defendants
@@ -473,28 +508,34 @@ rows: defendants
 columns:
   - Name: |
       row_item.name_full() if defined("row_item.name.first") else ""
+  - Address: |
+      row_item.address.block() if defined("row_item.address.address") else ""
+  - Phone number: |
+      row_item.phone_number if defined("row_item.phone_number") else ""
+  - Email: |
+      row_item.email if defined("row_item.email") else ""
 edit:
   - name.first
+  - address.address
+  - phone_number
+  - email
 confirm: True
 ---
-id: Sign Your Document
-code: |
-  signature_fields = ["plaintiffs[0].signature"]
----
 id: preview temporary_restraining_order
+section: review_temporary_restraining_order
 question: |
-  Preview your form. 
+  Preview your form before you sign it
 subquestion: |
-  Here is a preview of the form.   
+  Here is a preview of the form you will sign on the next page.
   
   ${ al_court_bundle.as_pdf(key='preview') }
 
-  Click the image to open it in a new browser tab. Click the "Edit answers" button
-  to edit your answers.
+  Click the image to open it in a new browser tab. Click the "Edit answers"
+  button to edit your answers.
 
   ${ action_button_html(url_action('review_temporary_restraining_order'), label='Edit answers', color='info') }
   
-  If you are happy with the document, go to the next page to download your document.
+  Remember to come back to this window to continue and sign your form.
 continue button field: temporary_restraining_order_preview_question
 ---
 id: download temporary_restraining_order
@@ -502,9 +543,10 @@ event: temporary_restraining_order_download
 question: |
   All done
 subquestion: |
-  Thank you ${users}. Your form is ready to download and deliver.
+  Thank you ${users}. Your forms are ready to download and deliver.
   
-  View, download and send your form below. Click the "Edit answers" button to fix any mistakes.
+  View, download, and send your forms below. Click the "Edit answers" button
+  to fix any mistakes.
 
   ${ action_button_html(url_action('review_temporary_restraining_order'), label='Edit answers', color='info') }
   
@@ -519,12 +561,12 @@ progress: 100
 # ALDocument objects specify the metadata for each template
 objects:
   - temporary_restraining_order_Post_interview_instructions: ALDocument.using(title="Instructions", filename="temporary_restraining_order_next_steps.docx", enabled=True, has_addendum=False)
-  - temporary_restraining_order_attachment: ALDocument.using(title="Temporary Restraining Order", filename="temporary_restraining_order", enabled=True, has_addendum=False, )
+  - temporary_restraining_order_attachment: ALDocument.using(title="Temporary Restraining Order", filename="temporary_restraining_order", enabled=True, has_addendum=False)
 ---
 # Bundles group the ALDocuments into separate downloads, such as for court and for the user
 objects:
-  - al_user_bundle: ALDocumentBundle.using(elements=[temporary_restraining_order_Post_interview_instructions, temporary_restraining_order_attachment], filename="temporary_restraining_order", title="All forms to download for your records", enabled=True)
-  - al_court_bundle: ALDocumentBundle.using(elements=[temporary_restraining_order_attachment],  filename="temporary_restraining_order", title="All forms to deliver to court", enabled=True)
+  - al_user_bundle: ALDocumentBundle.using(elements=[temporary_restraining_order_Post_interview_instructions, temporary_restraining_order_attachment], filename="temporary_restraining_order_user_bundle", title="All forms to download for your records", enabled=True)
+  - al_court_bundle: ALDocumentBundle.using(elements=[temporary_restraining_order_attachment], filename="temporary_restraining_order_court_bundle", title="All forms to deliver to court", enabled=True)
 ---
 # Each attachment defines a key in an ALDocument. We use `i` as the placeholder here so the same template is 
 # used for "preview" and "final" keys, and logic in the template checks the value of 
