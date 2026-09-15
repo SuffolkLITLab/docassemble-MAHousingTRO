@@ -404,6 +404,7 @@ fields:
       users[0].address_fields()
 ---
 event: review_housing_tro
+id: "review your answers"
 question: |
   Review your answers
 review:
