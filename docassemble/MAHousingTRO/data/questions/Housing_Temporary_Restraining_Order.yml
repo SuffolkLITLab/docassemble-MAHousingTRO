@@ -80,9 +80,9 @@ code: |
   Housing_Temporary_Restraining_Order0002_intro
 
   interview_order_Housing_Temporary_Restraining_Order0002
-  nav.set_section('signature_date')
+  nav.set_section('users_0_signature')
   signature_date
-  nav.set_section('users[0].signature')
+  nav.set_section('users_0_signature')
   Housing_Temporary_Restraining_Order0002_preview_question
   nav.set_section('users_0_signature')
   signature_fields = ['users[0].signature']
