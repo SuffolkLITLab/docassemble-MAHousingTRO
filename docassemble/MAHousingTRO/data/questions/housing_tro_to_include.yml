@@ -293,7 +293,7 @@ help: |
   working from home, permitted construction may still be allowed)
   * Unsafe living conditions that your landlord isn't fixing
   
-  [Read more](https://www.masslegalhelp.org/housing/lt1-chapter-8-rights-decent-place-live)
+  [Learn about your right to a decent place to live](https://www.masslegalhelp.org/housing/lt1-chapter-8-rights-decent-place-live)
 ---
 objects:
   - Housing_Temporary_Restraining_Order0002_attachment: ALDocument.using(title="Housing Temporary Restraining Order", filename="housing_tro", has_addendum=False)  
@@ -404,6 +404,7 @@ fields:
       users[0].address_fields()
 ---
 event: review_housing_tro
+id: review housing tro answers
 question: |
   Review your answers
 review:
